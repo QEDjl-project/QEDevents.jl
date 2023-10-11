@@ -4,4 +4,4 @@ authors = ["Uwe Hernandez Acosta <u.hernandez@hzdr.de>", "Simeon Ehrig", "Klaus 
 version = "0.1.0"
 
 [compat]
-julia = "1.9"
+julia = "1.6"
