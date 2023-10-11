@@ -1,5 +1,16 @@
 module QEDevents
 
-# Write your package code here.
+export AbstractSampler, AbstractScatteringProcessSampler,
+    AbstractProposalSampler, setup, is_exact, weight, max_weight
+
+import Random: rand, rand!, _rand!, AbstractRNG #_rand
+
+using QEDbase
+using QEDprocesses
+
+include("interfaces/qedprocesses_setup_interface.jl")
+include("interfaces/sampler_interface.jl")
+
+
 
 end
