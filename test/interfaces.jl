@@ -39,7 +39,7 @@ function TestSetup(n_final::Integer)
     )
 end
 
-Base.size(stp::TestSetup,N::Integer) = size(stp.dist)
+Base.size(stp::TestSetup,N::Integer) = size(stp.dist)[1] ###best way?
 Base.size(stp::TestSetup) = size(stp,1) #??
 
 #QEDcompton.scattering_process(stp::TestSamplerSetup) = stp.proc
@@ -55,12 +55,8 @@ struct TestSampler <: AbstractSampler
 end
 Base.size(samp::TestSampler,N::Integer) = size(samp.stp,N)
 Base.size(samp::TestSampler) = size(samp,1)
-#function _rand!(rng::AbstractRNG, smplr::TestSampler, x::AbstractVector{T}) where {T}
-#    rand!(rng, smplr.stp.dist, x)
-#end
 
 function QEDevents._rand!(rng::AbstractRNG, smplr::TestSampler, res::AbstractVector{P}) where {P}
-    #_rand!(rng,smplr,res[:,i])
     rand!(rng, smplr.stp.dist, res)
     return res
 end
@@ -158,7 +154,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             @test isapprox(test_x_inplace, groundtruth, atol=ATOL, rtol=RTOL)
             @test isapprox(test_x, groundtruth, atol=ATOL, rtol=RTOL)
         end
-
+        
         @testset "rand: matrix" begin
             # reproduce the same random samples three times
             rng1 = deepcopy(RNG)

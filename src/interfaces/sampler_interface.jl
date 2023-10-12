@@ -88,8 +88,8 @@ Generate a random sample from the sampler and write it into the given vector.
 function _rand! end
 
 function _rand!(rng::AbstractRNG, smplr::AbstractSampler, res::AbstractMatrix{P}) where {P}
-    for i in 1:size(res,2)########
-        _rand!(rng,smplr,res[:,i])
+    for i in 1:size(res,2)
+        _rand!(rng,smplr,view(res,:,i))
     end
     return res
 end
@@ -103,6 +103,9 @@ function rand(rng::AbstractRNG, smplr::AbstractSampler)
     _rand!(rng, smplr, Vector{eltype(smplr)}(undef, size(smplr,1)))
 end
 
+function rand(rng::AbstractRNG, smplr::AbstractSampler, N::Integer)
+    _rand!(rng, smplr, Matrix{eltype(smplr)}(undef, size(smplr,1), N)) ###check
+end
 
 
 
