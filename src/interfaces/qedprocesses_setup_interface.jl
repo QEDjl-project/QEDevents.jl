@@ -81,8 +81,9 @@ Exception which is thrown if a given input is invalid, e.g. passed to [`_assert_
 struct InvalidInputError <: AbstractInvalidInputException
     msg::String
 end
-Base.showerror(io::IO, err::InvalidInputError) =
-    println(io, "InvalidInputError: $(err.msg).")
+function Base.showerror(io::IO, err::InvalidInputError)
+    return println(io, "InvalidInputError: $(err.msg).")
+end
 
 """
 
@@ -188,7 +189,9 @@ an object which is a subtype of [`AbstractModelDefinition`](@ref).
 """
 function physical_model end
 
-@inline number_incoming_particles(stp::AbstractProcessSetup) =
-    number_incoming_particles(scattering_process(stp))
-@inline number_outgoing_particles(stp::AbstractProcessSetup) =
-    number_outgoing_particles(scattering_process(stp))
+@inline function number_incoming_particles(stp::AbstractProcessSetup)
+    return number_incoming_particles(scattering_process(stp))
+end
+@inline function number_outgoing_particles(stp::AbstractProcessSetup)
+    return number_outgoing_particles(scattering_process(stp))
+end
