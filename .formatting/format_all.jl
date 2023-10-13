@@ -1,6 +1,6 @@
 using JuliaFormatter
 
-# we asume the format_all.jl script is located in QEDevents.jl/.formatting
+# we assume the format_all.jl script is located in QEDevents.jl/.formatting
 project_path = Base.Filesystem.joinpath(Base.Filesystem.dirname(Base.source_path()), "..")
 
 not_formatted = format(project_path; verbose=true)
