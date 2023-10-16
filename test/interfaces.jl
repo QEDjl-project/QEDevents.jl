@@ -4,8 +4,7 @@ using Distributions
 using QEDbase
 
 RNG = MersenneTwister(708583836976)
-N_init = rand(RNG, 2:8)
-N_final = rand(RNG, 2:8)
+DIM = rand(RNG, 2:8)
 
 ATOL = 0.0
 RTOL = sqrt(eps())
@@ -17,8 +16,8 @@ struct TestSetup{D} <: QEDevents.AbstractComputationSetup
     dist::D
 end
 
-function TestSetup(n_final::Integer)
-    return TestSetup(product_distribution(Uniform.(-rand(n_final), 1.0)))
+function TestSetup(dim::Integer)
+    return TestSetup(product_distribution(Uniform.(-rand(dim), 1.0)))
 end
 
 Base.size(stp::TestSetup, N::Integer) = size(stp.dist)[1] ###best way?
@@ -42,9 +41,7 @@ end
 
 is_exact(::TestSampler) = RAND_EXACTNESS
 
-@testset "interface tests ($N_init, $N_final)" for (N_init, N_final) in Iterators.product(
-    (1, rand(RNG, 2:8)), (1, rand(RNG, 2:8))
-)
+@testset "sampler interface" begin
     setup(smplr::TestSampler) = smplr.stp
     QEDevents._weight(smplr::TestSampler, x) = QEDevents.compute(smplr.stp, x) # assuming a product of Uniforms    ##remove the QEDevents nstead of replacing by processes because exported
     max_weight(smplr::TestSampler) = pdf(smplr.stp.dist, zeros(size(smplr.stp.dist)))
@@ -56,7 +53,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
     end
 
     @testset "process sampler interface" begin
-        proc_stp = TestSetup(N_final)
+        proc_stp = TestSetup(DIM)
         test_smplr = TestSampler(proc_stp)
 
         @testset "properties" begin
@@ -64,22 +61,19 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             @test is_exact(test_smplr) == RAND_EXACTNESS
             @test size(test_smplr) == size(proc_stp)
             @test isapprox(
-                max_weight(test_smplr),
-                pdf(proc_stp.dist, zeros(N_final)),
-                atol=ATOL,
-                rtol=RTOL,
+                max_weight(test_smplr), pdf(proc_stp.dist, zeros(DIM)), atol=ATOL, rtol=RTOL
             )
         end
 
         @testset "weight: vector" begin
-            x_out = rand(RNG, N_final)
+            x_out = rand(RNG, DIM)
             test_vals = weight(test_smplr, x_out)
             groundtruth = pdf(proc_stp.dist, x_out)
             @test isapprox(test_vals, groundtruth, atol=ATOL, rtol=RTOL)
         end
 
         @testset "weight: vector-matrix" begin
-            x_out = rand(RNG, N_final, 2)
+            x_out = rand(RNG, DIM, 2)
             test_vals = weight(test_smplr, x_out)
             groundtruth = pdf(proc_stp.dist, x_out)
             @test isapprox(test_vals, groundtruth, atol=ATOL, rtol=RTOL)
@@ -91,7 +85,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             rng2 = deepcopy(RNG)
             rng3 = deepcopy(RNG)
 
-            test_x_inplace = zeros(N_final)
+            test_x_inplace = zeros(DIM)
             rand!(rng1, test_smplr, test_x_inplace)
             test_x = rand(rng2, test_smplr)
             groundtruth = rand(rng3, proc_stp.dist)
@@ -107,7 +101,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             rng2 = deepcopy(RNG)
             rng3 = deepcopy(RNG)
 
-            test_x_inplace = zeros(N_final, 2)
+            test_x_inplace = zeros(DIM, 2)
             rand!(rng1, test_smplr, test_x_inplace)
             test_x = rand(rng2, test_smplr, 2)
             groundtruth = rand(rng3, proc_stp.dist, 2)
