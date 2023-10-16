@@ -38,8 +38,9 @@ abstract type AbstractSampler <: AbstractComputationSetup end
 Interface function, which asserts that the given `input` is valid.
 """
 function _assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
-    size(x, 1) == size(smplr, 1)[1] ||
-        error("Invalid input. The dimensionality of the input is") # $(size(x,1)) but it should be $(size(smplr,1)[1]).")
+    size(x, 1) == size(smplr, 1)[1] || error(
+        "Invalid input. The dimensionality of the input is $(size(x,1)) but it should be $(size(smplr,1)[1]).",
+    )
     return eltype(x) == eltype(smplr) || error(
         "Invalid input. The element type of the input is $(eltype(x)) but it should be $(eltype(smplr)).",
     )
@@ -69,7 +70,7 @@ function setup end
 
     is_exact(::AbstractSampler)
 
-Return if the sampler is exactly representing the base? distribution or not.
+Return if the sampler is exactly representing the base distribution or not.
 """
 function is_exact end
 
@@ -102,15 +103,12 @@ function rand(rng::AbstractRNG, smplr::AbstractSampler)
 end
 
 function rand(rng::AbstractRNG, smplr::AbstractSampler, N::Integer)
-    return _rand!(rng, smplr, Matrix{eltype(smplr)}(undef, size(smplr, 1), N)) ###check
+    return _rand!(rng, smplr, Matrix{eltype(smplr)}(undef, size(smplr, 1), N))
 end
-
-# abstract process sampler
 
 abstract type AbstractScatteringProcessSampler{T<:QEDbase.AbstractFourMomentum} <:
               AbstractSampler end
 
-#deligations to the setup
 function scattering_process(smplr::AbstractScatteringProcessSampler)
     return scattering_process(setup(smplr))
 end
@@ -118,6 +116,10 @@ physical_model(smplr::AbstractScatteringProcessSampler) = physical_model(setup(s
 
 @inline Base.eltype(::AbstractScatteringProcessSampler{T}) where {T} = T
 
-# abstract rejection sampler
+"""
 
+    max_weight(::AbstractSampler)
+
+Return the maximum possible weight for the sampler.
+"""
 function max_weight end
