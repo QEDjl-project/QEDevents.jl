@@ -80,7 +80,7 @@ end
 
 """
 
-    rand(rng, ::AbstractSampler, ::AbstractVector{P}) where {P}
+    _rand!(rng, ::AbstractSampler, ::AbstractVector{P}) where {P}
 
 Generate a random sample from the sampler and write it into the given vector.
 """
