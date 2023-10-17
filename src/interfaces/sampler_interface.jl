@@ -62,7 +62,7 @@ function _weight end
 
     setup(::AbstractSampler)
 
-???
+Interface function, which returns the `setup::AbstractComputeSetup` associated with the sampler.
 """
 function setup end
 
