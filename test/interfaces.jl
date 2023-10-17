@@ -72,7 +72,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             @test isapprox(test_vals, groundtruth, atol=ATOL, rtol=RTOL)
         end
 
-        @testset "weight: vector-matrix" begin
+        @testset "weight: matrix" begin
             x_out = rand(RNG, DIM, 2)
             test_vals = weight(test_smplr, x_out)
             groundtruth = pdf(proc_stp.dist, x_out)
