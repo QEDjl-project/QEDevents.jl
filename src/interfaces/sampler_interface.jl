@@ -38,12 +38,16 @@ abstract type AbstractSampler <: AbstractComputationSetup end
 Interface function, which asserts that the given `input` is valid.
 """
 function _assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
-    size(x, 1) == size(smplr, 1)[1] || throw(InvalidInputError(
-        "Invalid input. The dimensionality of the input is $(size(x,1)) but it should be $(size(smplr,1)[1]).",
-    ))
-    return eltype(x) == eltype(smplr) || throw(InvalidInputError(
-        "Invalid input. The element type of the input is $(eltype(x)) but it should be $(eltype(smplr)).",
-    ))
+    size(x, 1) == size(smplr, 1)[1] || throw(
+        InvalidInputError(
+            "Invalid input. The dimensionality of the input is $(size(x,1)) but it should be $(size(smplr,1)[1]).",
+        ),
+    )
+    return eltype(x) == eltype(smplr) || throw(
+        InvalidInputError(
+            "Invalid input. The element type of the input is $(eltype(x)) but it should be $(eltype(smplr)).",
+        ),
+    )
 end
 
 function _compute(smplr::AbstractSampler, sample)

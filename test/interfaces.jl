@@ -112,8 +112,12 @@ end
 
         @testset "interface fail" begin
             @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1))
-            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1, 2))
-            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(Float32, DIM))
+            @test_throws QEDevents.InvalidInputError rand!(
+                RNG, test_smplr, zeros(DIM + 1, 2)
+            )
+            @test_throws QEDevents.InvalidInputError rand!(
+                RNG, test_smplr, zeros(Float32, DIM)
+            )
         end
     end
 end
