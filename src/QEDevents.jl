@@ -13,6 +13,8 @@ import Random: rand, rand!, _rand!, AbstractRNG
 using QEDbase
 using QEDprocesses
 
+using DocStringExtensions
+
 include("interfaces/qedprocesses_setup_interface.jl")
 include("interfaces/sampler_interface.jl")
 
