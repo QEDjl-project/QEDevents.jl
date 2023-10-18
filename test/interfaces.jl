@@ -109,5 +109,11 @@ is_exact(::TestSampler) = RAND_EXACTNESS
             @test isapprox(test_x_inplace, groundtruth, atol=ATOL, rtol=RTOL)
             @test isapprox(test_x, groundtruth, atol=ATOL, rtol=RTOL)
         end
+
+        @testset "interface fail" begin
+            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1))
+            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1, 2))
+            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(Float32, DIM))
+        end
     end
 end
