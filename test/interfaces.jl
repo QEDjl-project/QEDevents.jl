@@ -5,7 +5,6 @@ using Distributions
 using QEDbase
 
 RNG = MersenneTwister(708583836976)
-DIM = rand(RNG, 2:8)
 
 ATOL = 0.0
 RTOL = sqrt(eps())
@@ -52,7 +51,7 @@ function Distributions._rand!(
     return Distributions.rand!(rng, s.stp.dist, x)
 end
 
-@testset "sampler interface" begin
+@testset "sampler interface" for DIM in [1, rand(RNG, 2:8)]
     @testset "process sampler interface" begin
         proc_stp = TestSetup(DIM)
         test_smplr = TestSampler(proc_stp)
