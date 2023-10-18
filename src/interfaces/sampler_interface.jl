@@ -58,7 +58,12 @@ end
 
     _weight(::AbstractSampler, sample)
 
-Return the weight associated with the given sample according to the sampler.
+Interface function, which returns the weight associated with the given sample according to the sampler.
+
+!!! note ""
+    
+    This function must not do input validation. This is done by [`weight`](@ref) which calls _weight after input validation.
+
 """
 function _weight end
 
@@ -74,10 +79,16 @@ function setup end
 
     is_exact(::AbstractSampler)
 
-Return if the sampler is exactly representing the base distribution or not.
+Interface function, which returns whether the sampler is exactly representing the base distribution or not.
 """
 function is_exact end
 
+"""   
+
+    $(TYPEDSIGNATURES)
+
+Interface function, which validates the input, calculates the weight via [`_weight`](@ref) and performs an optional post-processing via [`_post_processing`](@ref).
+"""
 function weight(smplr::AbstractSampler, sample)
     return compute(smplr, sample)
 end
@@ -124,6 +135,6 @@ physical_model(smplr::AbstractScatteringProcessSampler) = physical_model(setup(s
 
     max_weight(::AbstractSampler)
 
-Return the maximum possible weight for the sampler.
+Interface function, which returns the maximum possible weight for the sampler.
 """
 function max_weight end
