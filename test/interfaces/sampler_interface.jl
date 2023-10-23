@@ -19,8 +19,8 @@ function TestSetup(dim::Integer)
     return TestSetup(product_distribution(Uniform.(-rand(dim), 1.0)))
 end
 
-Base.size(stp::TestSetup, N::Integer) = size(stp.dist)[1] ###best way?
-Base.size(stp::TestSetup) = size(stp, 1) #??
+Base.size(stp::TestSetup, N::Integer) = size(stp.dist)[1]
+Base.size(stp::TestSetup) = size(stp, 1)
 
 QEDevents._compute(stp::TestSetup, x) = pdf(stp.dist, x)
 

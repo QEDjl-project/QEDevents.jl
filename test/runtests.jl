@@ -4,6 +4,6 @@ using SafeTestsets
 
 @testset "QEDevents.jl" begin
     @time @safetestset "sampler interfaces" begin
-        include("interfaces.jl")
+        include("interfaces/sampler_interface.jl")
     end
 end
