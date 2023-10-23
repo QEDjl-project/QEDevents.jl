@@ -9,7 +9,6 @@ RNG = MersenneTwister(708583836976)
 ATOL = 0.0
 RTOL = sqrt(eps())
 
-RAND_MAX = rand(RNG)
 RAND_EXACTNESS = rand(RNG, Bool)
 
 struct TestSetup{D} <: QEDevents.AbstractComputationSetup
