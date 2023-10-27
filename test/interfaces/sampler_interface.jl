@@ -1,4 +1,4 @@
-#using QEDprocesses
+using QEDprocesses
 using QEDevents
 using Random
 using Distributions
@@ -11,7 +11,7 @@ RTOL = sqrt(eps())
 
 RAND_EXACTNESS = rand(RNG, Bool)
 
-struct TestSetup{D} <: QEDevents.AbstractComputationSetup
+struct TestSetup{D} <: AbstractComputationSetup
     dist::D
 end
 
@@ -22,7 +22,7 @@ end
 Base.size(stp::TestSetup, N::Integer) = size(stp.dist)[1]
 Base.size(stp::TestSetup) = size(stp, 1)
 
-QEDevents._compute(stp::TestSetup, x) = pdf(stp.dist, x)
+QEDprocesses._compute(stp::TestSetup, x) = pdf(stp.dist, x)
 
 struct TestSampler <: AbstractSampler
     stp::TestSetup
@@ -41,7 +41,7 @@ end
 is_exact(::TestSampler) = RAND_EXACTNESS
 
 setup(smplr::TestSampler) = smplr.stp
-QEDevents._weight(smplr::TestSampler, x) = QEDevents.compute(smplr.stp, x) # assuming a product of Uniforms    ##remove the QEDevents nstead of replacing by processes because exported
+QEDevents._weight(smplr::TestSampler, x) = compute(smplr.stp, x) # assuming a product of Uniforms
 max_weight(smplr::TestSampler) = pdf(smplr.stp.dist, zeros(size(smplr.stp.dist)))
 function Distributions._rand!(
     rng::Random.AbstractRNG, s::TestSampler, x::AbstractVector{T}
@@ -109,13 +109,9 @@ end
         end
 
         @testset "interface fail" begin
-            @test_throws QEDevents.InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1))
-            @test_throws QEDevents.InvalidInputError rand!(
-                RNG, test_smplr, zeros(DIM + 1, 2)
-            )
-            @test_throws QEDevents.InvalidInputError rand!(
-                RNG, test_smplr, zeros(Float32, DIM)
-            )
+            @test_throws InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1))
+            @test_throws InvalidInputError rand!(RNG, test_smplr, zeros(DIM + 1, 2))
+            @test_throws InvalidInputError rand!(RNG, test_smplr, zeros(Float32, DIM))
         end
     end
 end

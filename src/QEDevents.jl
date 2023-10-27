@@ -15,7 +15,6 @@ using QEDprocesses
 
 using DocStringExtensions
 
-include("interfaces/qedprocesses_setup_interface.jl")
 include("interfaces/sampler_interface.jl")
 
 end

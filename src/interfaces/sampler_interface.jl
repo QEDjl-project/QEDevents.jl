@@ -50,7 +50,7 @@ function _assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
     )
 end
 
-function _compute(smplr::AbstractSampler, sample)
+function QEDprocesses._compute(smplr::AbstractSampler, sample)
     return _weight(smplr::AbstractSampler, sample)
 end
 
