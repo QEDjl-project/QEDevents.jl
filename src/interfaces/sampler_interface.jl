@@ -87,7 +87,7 @@ function is_exact end
 
     $(TYPEDSIGNATURES)
 
-Interface function, which validates the input, calculates the weight via [`_weight`](@ref) and performs an optional post-processing via [`_post_processing`](@ref).
+Interface function, which validates the input, calculates the weight via [`_weight`](@ref) and performs an optional post-processing via QEDprocesses._post_processing.
 """
 function weight(smplr::AbstractSampler, sample)
     return compute(smplr, sample)
