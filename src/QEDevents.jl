@@ -8,7 +8,8 @@ export AbstractSampler,
     weight,
     max_weight
 
-import Random: rand, rand!, _rand!, AbstractRNG
+import Random: AbstractRNG, MersenneTwister
+import Distributions: rand, rand!, _rand!
 
 using QEDbase
 using QEDprocesses

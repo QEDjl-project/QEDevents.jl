@@ -1,8 +1,9 @@
 using QEDprocesses
 using QEDevents
-using Random
-using Distributions
 using QEDbase
+import Random: AbstractRNG, MersenneTwister
+using Distributions
+import Distributions: rand, rand!, _rand!
 
 RNG = MersenneTwister(708583836976)
 
@@ -43,11 +44,11 @@ is_exact(::TestSampler) = RAND_EXACTNESS
 setup(smplr::TestSampler) = smplr.stp
 QEDevents._weight(smplr::TestSampler, x) = compute(smplr.stp, x) # assuming a product of Uniforms
 max_weight(smplr::TestSampler) = pdf(smplr.stp.dist, zeros(size(smplr.stp.dist)))
-function Distributions._rand!(
-    rng::Random.AbstractRNG, s::TestSampler, x::AbstractVector{T}
+function _rand!(
+    rng::AbstractRNG, s::TestSampler, x::AbstractVector{T}
 ) where {T<:Real}
     # assuming a sampler setup from Distributions.jl
-    return Distributions.rand!(rng, s.stp.dist, x)
+    return rand!(rng, s.stp.dist, x)
 end
 
 @testset "sampler interface" for DIM in [1, rand(RNG, 2:8)]
