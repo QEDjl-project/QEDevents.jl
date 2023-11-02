@@ -44,9 +44,7 @@ is_exact(::TestSampler) = RAND_EXACTNESS
 setup(smplr::TestSampler) = smplr.stp
 QEDevents._weight(smplr::TestSampler, x) = compute(smplr.stp, x) # assuming a product of Uniforms
 max_weight(smplr::TestSampler) = pdf(smplr.stp.dist, zeros(size(smplr.stp.dist)))
-function _rand!(
-    rng::AbstractRNG, s::TestSampler, x::AbstractVector{T}
-) where {T<:Real}
+function _rand!(rng::AbstractRNG, s::TestSampler, x::AbstractVector{T}) where {T<:Real}
     # assuming a sampler setup from Distributions.jl
     return rand!(rng, s.stp.dist, x)
 end
