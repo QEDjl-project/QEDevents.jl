@@ -95,7 +95,7 @@ end
 
 """
 
-    _rand!(rng, ::AbstractSampler, ::AbstractVector{P}) where {P}
+    $(TYPEDSIGNATURES)
 
 Generate a random sample from the sampler and write it into the given vector.
 """
