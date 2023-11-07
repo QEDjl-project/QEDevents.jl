@@ -99,7 +99,9 @@ end
 
 Generate a random sample from the sampler and write it into the given vector.
 """
-
+function _rand!(rng::AbstractRNG, smplr::AbstractSampler, x::AbstractVector)
+    throw(MethodError(_rand!,(rng,smplr,x)))
+end
 function _rand!(rng::AbstractRNG, smplr::AbstractSampler, res::AbstractMatrix{P}) where {P}
     for i in 1:size(res, 2)
         _rand!(rng, smplr, view(res, :, i))
