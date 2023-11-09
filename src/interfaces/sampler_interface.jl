@@ -62,7 +62,7 @@ Interface function, which returns the weight associated with the given sample ac
 
 !!! note ""
     
-    This function must not do input validation. This is done by [`weight`](@ref) which calls `_weight` after input validation.
+    This function must not do input validation. This is done by [`weight`](@ref), which calls `_weight` after input validation.
 
 """
 function _weight end
@@ -87,7 +87,7 @@ function is_exact end
 
     $(TYPEDSIGNATURES)
 
-Interface function, which validates the input, calculates the weight via [`_weight`](@ref) and performs an optional post-processing via QEDprocesses._post_processing.
+Interface function, which validates the input, calculates the weight via [`_weight`](@ref), and performs an optional post-processing via `QEDprocesses._post_processing`.
 """
 function weight(smplr::AbstractSampler, sample)
     return compute(smplr, sample)
