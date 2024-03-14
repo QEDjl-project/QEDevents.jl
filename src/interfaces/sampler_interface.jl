@@ -13,12 +13,13 @@ Abstract base type for general sampler.
     Functions to be implemented
 
     ```Julia
-    CustomSampler <: AbstractSampler{Float64}
+    CustomSampler <: AbstractSampler
 
-    Base.eltype  # type of the generated samples
-    QEDevents._weight
-    Base.size  # Return the dimensionality of the sampler (number of outgoing four-momenta per sample).
-    is_exact
+    Base.eltype(::CustomSampler)# type of the generated samples
+    QEDevents._weight(::CustomSampler,x)
+    QEDevents.setup(::CustomSampler) # return the setup for generating the samples
+    Base.size(::CustomSampler)  # Return the dimensionality of the sampler (e.g. number of outgoing four-momenta per sample).
+    QEDevents.is_exact(::CustomSampler)
     QEDevents._rand!(rng::AbstractRNG, ::AbstractSampler, x::AbstractVector{T}) where {T}
 
     ```
@@ -26,18 +27,16 @@ Abstract base type for general sampler.
     optional
 
     ```Julia
-    _post_processing
+    _post_processing(::CustomSampler,x)
     ```
 
 """
 abstract type AbstractSampler <: AbstractComputationSetup end
-
-@inline Base.eltype(::AbstractSampler) = Float64
-
+Base.eltype(smplr::AbstractSampler) = throw(MethodError(eltype, (smplr,)))
 """
 Interface function, which asserts that the given `input` is valid.
 """
-function _assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
+function QEDprocesses._assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
     size(x, 1) == size(smplr, 1)[1] || throw(
         InvalidInputError(
             "The dimensionality of the input is $(size(x,1)) but it should be $(size(smplr,1)[1]).",
@@ -111,7 +110,7 @@ function _rand!(rng::AbstractRNG, smplr::AbstractSampler, res::AbstractMatrix{P}
 end
 
 function rand!(rng::AbstractRNG, smplr::AbstractSampler, x::AbstractVecOrMat)
-    _assert_valid_input(smplr, x)
+    QEDprocesses._assert_valid_input(smplr, x)
     return _rand!(rng, smplr, x)
 end
 
@@ -122,6 +121,11 @@ end
 function rand(rng::AbstractRNG, smplr::AbstractSampler, N::Integer)
     return _rand!(rng, smplr, Matrix{eltype(smplr)}(undef, size(smplr, 1), N))
 end
+
+
+####
+# Sampler related to scattering processes
+####
 
 abstract type AbstractScatteringProcessSampler{T<:QEDbase.AbstractFourMomentum} <:
               AbstractSampler end
@@ -140,3 +144,40 @@ physical_model(smplr::AbstractScatteringProcessSampler) = physical_model(setup(s
 Interface function, which returns the maximum possible weight for the sampler.
 """
 function max_weight end
+
+####
+# Proposal Sampler
+####
+
+"""
+    AbstractProposalSampler <: AbstractSampler
+
+Base type for proposal sampler. For these sampler
+one needs to implement the standard sampler interface:
+
+```Julia
+    Base.eltype(::CustomSampler)# type of the generated samples
+    QEDevents._weight(::CustomSampler,x)
+    QEDevents.setup(::CustomSampler) # return the setup for generating the samples
+    Base.size(::CustomSampler)  # Return the dimensionality of the sampler (e.g. number of outgoing four-momenta per sample).
+    QEDevents._rand!(rng::AbstractRNG, ::AbstractSampler, x::AbstractVector{T}) where {T}
+```
+where `is_exact(::AbstractProposalSampler) == false`.
+Additionally, one needs to implement the training function, which adopts the given setup:
+
+```Julia
+    train!(smplr::AbstractProposalSampler, train_params; loss=Nothing)
+```
+"""
+abstract type AbstractProposalSampler <: AbstractSampler end
+is_exact(::AbstractProposalSampler) = false
+
+
+"""
+
+    train!(smplr::AbstractProposalSampler, train_params; loss=Nothing)
+
+Interface function to perfom the training of a proposal sampler. 
+"""
+function train! end
+

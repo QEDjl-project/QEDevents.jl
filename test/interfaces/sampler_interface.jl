@@ -28,9 +28,8 @@ QEDprocesses._compute(stp::TestSetup, x) = pdf(stp.dist, x)
 struct TestSampler <: AbstractSampler
     stp::TestSetup
 end
-
-Base.size(samp::TestSampler, N::Integer) = size(samp.stp, N)
-Base.size(samp::TestSampler) = size(samp, 1)
+Base.eltype(::TestSampler) = Float64
+Base.size(samp::TestSampler, N::Integer=1) = size(samp.stp, N)
 
 function QEDevents._rand!(
     rng::AbstractRNG, smplr::TestSampler, res::AbstractVector{P}
@@ -49,7 +48,26 @@ function _rand!(rng::AbstractRNG, s::TestSampler, x::AbstractVector{T}) where {T
     return rand!(rng, s.stp.dist, x)
 end
 
+struct TestSampler_FAIL <: AbstractSampler
+    stp::TestSetup
+end
+
 @testset "sampler interface" for DIM in [1, rand(RNG, 2:8)]
+    @testset "interface fail" begin
+        proc_stp = TestSetup(DIM)
+        test_smplr_failed = TestSampler_FAIL(proc_stp)
+        x_out = rand(RNG, DIM)
+
+        @test_throws MethodError setup(test_smplr_failed)
+        @test_throws MethodError is_exact(test_smplr_failed) 
+        @test_throws MethodError size(test_smplr_failed)
+        @test_throws MethodError max_weight(test_smplr_failed)
+        @test_throws MethodError weight(test_smplr_failed, x_out)
+
+        test_x_inplace = zeros(DIM)
+        @test_throws MethodError rand!(RNG,test_smplr_failed,test_x_inplace)
+        @test_throws MethodError rand(RNG,test_smplr_failed)
+    end
     @testset "process sampler interface" begin
         proc_stp = TestSetup(DIM)
         test_smplr = TestSampler(proc_stp)

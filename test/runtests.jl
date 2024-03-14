@@ -6,4 +6,8 @@ using SafeTestsets
     @time @safetestset "sampler interfaces" begin
         include("interfaces/sampler_interface.jl")
     end
+
+    @time @safetestset "uniform sampler" begin
+        include("sampler/uniform.jl")
+    end
 end
