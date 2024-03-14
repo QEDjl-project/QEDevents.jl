@@ -37,7 +37,7 @@ Base.eltype(smplr::AbstractSampler) = throw(MethodError(eltype, (smplr,)))
 Interface function, which asserts that the given `input` is valid.
 """
 function QEDprocesses._assert_valid_input(smplr::AbstractSampler, x::AbstractVecOrMat)
-    size(x, 1) == size(smplr, 1)[1] || throw(
+    size(x, 1) == size(smplr, 1) || throw(
         InvalidInputError(
             "The dimensionality of the input is $(size(x,1)) but it should be $(size(smplr,1)[1]).",
         ),
