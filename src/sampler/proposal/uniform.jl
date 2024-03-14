@@ -23,7 +23,7 @@ weight(uniform_sampler,[0.5,0.0,4.0])
 ```
 
 """
-struct UniformSampler{DIM,D} <: AbstractProposalSampler
+struct UniformSampler{D} <: AbstractProposalSampler
     dist::D
 
     function UniformSampler(lower_bounds::AbstractVector, upper_bounds::AbstractVector)
