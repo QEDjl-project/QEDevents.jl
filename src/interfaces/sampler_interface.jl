@@ -122,7 +122,6 @@ function rand(rng::AbstractRNG, smplr::AbstractSampler, N::Integer)
     return _rand!(rng, smplr, Matrix{eltype(smplr)}(undef, size(smplr, 1), N))
 end
 
-
 ####
 # Sampler related to scattering processes
 ####
@@ -172,7 +171,6 @@ Additionally, one needs to implement the training function, which adopts the giv
 abstract type AbstractProposalSampler <: AbstractSampler end
 is_exact(::AbstractProposalSampler) = false
 
-
 """
 
     train!(smplr::AbstractProposalSampler, train_params; loss=Nothing)
@@ -180,4 +178,3 @@ is_exact(::AbstractProposalSampler) = false
 Interface function to perfom the training of a proposal sampler. 
 """
 function train! end
-

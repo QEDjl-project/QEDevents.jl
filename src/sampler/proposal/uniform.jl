@@ -26,18 +26,18 @@ weight(uniform_sampler,[0.5,0.0,4.0])
 struct UniformSampler{DIM,D} <: AbstractProposalSampler
     dist::D
 
-    function UniformSampler(lower_bounds::AbstractVector,upper_bounds::AbstractVector) 
-        dist = product_distribution(Uniform.(lower_bounds,upper_bounds))
+    function UniformSampler(lower_bounds::AbstractVector, upper_bounds::AbstractVector)
+        dist = product_distribution(Uniform.(lower_bounds, upper_bounds))
         return new{typeof(dist)}(dist)
     end
 end
 
-function setup(::UniformSampler) 
+function setup(::UniformSampler)
     @warn "Uniform sampler does not need a setup."
     return nothing
 end
 
-function train!(::UniformSampler, config...) 
+function train!(::UniformSampler, config...)
     @warn "Uniform sampler does not need to be trained."
     return nothing
 end
@@ -45,15 +45,13 @@ end
 # TODO: generalize this! -> write issue about this! 
 Base.eltype(::UniformSampler) = Float64
 
-
 Base.size(s::UniformSampler) = size(s.dist)
 Base.size(s::UniformSampler, k) = size(s)[k]
 
-function _weight(u::UniformSampler,x)
-    pdf(u.dist,x)
+function _weight(u::UniformSampler, x)
+    return pdf(u.dist, x)
 end
 
 function _rand!(rng::AbstractRNG, u::UniformSampler, x::AbstractVecOrMat{T}) where {T<:Real}
     return Distributions.rand!(rng, u.dist, x)
 end
-

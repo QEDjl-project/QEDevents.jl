@@ -8,23 +8,22 @@ RNG = MersenneTwister(137137137)
 ATOL = 0.0
 RTOL = sqrt(eps())
 
-DIMS = [1,rand(RNG,2:8),rand(RNG,9:30)]
+DIMS = [1, rand(RNG, 2:8), rand(RNG, 9:30)]
 
 # volume of a box with bounds
 _volume(bounds) = prod(bounds[2] .- bounds[1])
 
-
 @testset "sampler interface" begin
-    @test hasmethod( QEDevents._weight, Tuple{UniformSampler, <: Union{}})
-    @test hasmethod( Base.eltype, Tuple{UniformSampler})
+    @test hasmethod(QEDevents._weight, Tuple{UniformSampler,<:Union{}})
+    @test hasmethod(Base.eltype, Tuple{UniformSampler})
     @test hasmethod(Base.size, Tuple{UniformSampler})
     @test hasmethod(QEDevents.setup, Tuple{UniformSampler})
-    @test hasmethod(QEDevents.train!, Tuple{UniformSampler, <:Union{}})
-    @test hasmethod(QEDevents._rand!, Tuple{<:AbstractRNG, UniformSampler, <:AbstractVector})
+    @test hasmethod(QEDevents.train!, Tuple{UniformSampler,<:Union{}})
+    @test hasmethod(QEDevents._rand!, Tuple{<:AbstractRNG,UniformSampler,<:AbstractVector})
 end
 
 @testset "dim: $dim" for dim in DIMS
-    bounds = [-rand(RNG,dim),rand(RNG,dim)]
+    bounds = [-rand(RNG, dim), rand(RNG, dim)]
     uniform_sampler = UniformSampler(bounds...)
 
     @testset "rand: vector" begin
@@ -55,9 +54,9 @@ end
 
         @test isapprox(test_x_inplace, groundtruth, atol=ATOL, rtol=RTOL)
         @test isapprox(test_x, groundtruth, atol=ATOL, rtol=RTOL)
-    end 
+    end
     @testset "pdf" begin
-        test_weight = weight(uniform_sampler,zeros(dim))
-        @test isapprox(test_weight,inv(_volume(bounds)))
+        test_weight = weight(uniform_sampler, zeros(dim))
+        @test isapprox(test_weight, inv(_volume(bounds)))
     end
 end

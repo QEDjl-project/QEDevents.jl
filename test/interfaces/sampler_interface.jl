@@ -59,14 +59,14 @@ end
         x_out = rand(RNG, DIM)
 
         @test_throws MethodError setup(test_smplr_failed)
-        @test_throws MethodError is_exact(test_smplr_failed) 
+        @test_throws MethodError is_exact(test_smplr_failed)
         @test_throws MethodError size(test_smplr_failed)
         @test_throws MethodError max_weight(test_smplr_failed)
         @test_throws MethodError weight(test_smplr_failed, x_out)
 
         test_x_inplace = zeros(DIM)
-        @test_throws MethodError rand!(RNG,test_smplr_failed,test_x_inplace)
-        @test_throws MethodError rand(RNG,test_smplr_failed)
+        @test_throws MethodError rand!(RNG, test_smplr_failed, test_x_inplace)
+        @test_throws MethodError rand(RNG, test_smplr_failed)
     end
     @testset "process sampler interface" begin
         proc_stp = TestSetup(DIM)
