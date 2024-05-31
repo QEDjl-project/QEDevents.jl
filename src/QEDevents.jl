@@ -9,7 +9,7 @@ export AbstractSampler,
     max_weight
 
 export ParticleDistribution
-export SingleParticleDistribution
+export SingleParticleDistribution, particle
 
 import Random: AbstractRNG, MersenneTwister
 import Distributions: rand, rand!, _rand!
@@ -21,9 +21,9 @@ using QEDprocesses
 using DocStringExtensions
 
 include("interfaces/sampler_interface.jl")
-include("interfaces/particle_distributions/types.jl")
-include("interfaces/particle_distributions/interface.jl")
-include("interfaces/particle_distributions/properties.jl")
-include("interfaces/particle_distributions/generics.jl")
+include("interfaces/particle_distribution.jl")
+
+include("interfaces/single_particle_distribution/types.jl")
+include("interfaces/single_particle_distribution/interface.jl")
 
 end

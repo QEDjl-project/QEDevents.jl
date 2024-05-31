@@ -1,10 +1,5 @@
-# N ... dimension of the vector space,
-# N=0 ... single mom,
-# N=1 ... vector of moms
-abstract type ParticleLikeVariate{N} <: VariateForm end
-const SingleParticleVariate = ParticleLikeVariate{0}
 
-abstract type ParticleDistribution{F<:ParticleLikeVariate} <: Sampleable{F,Continuous} end
+const SingleParticleVariate = ParticleLikeVariate{0}
 
 """
 
@@ -32,3 +27,7 @@ Optional:
 const SingleParticleDistribution = ParticleDistribution{SingleParticleVariate}
 
 Broadcast.broadcastable(d::SingleParticleDistribution) = Ref(d)
+
+Base.length(::Sampleable{SingleParticleVariate}) = 1
+Base.size(::Sampleable{SingleParticleVariate}) = ()
+Base.eltype(::Type{<:Sampleable{SingleParticleVariate,Continuous}}) = SFourMomentum

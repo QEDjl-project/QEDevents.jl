@@ -24,6 +24,8 @@ QEDevents._weight(d::SingleParticleDistribution, x::SFourMomentum) = one(eltype(
 @testset "single particle distribution" begin
     @testset "static properties" begin
         test_single_dist = TestSingleParticleDist()
+
+        @test particle(test_single_dist) == TestParticle()
         @test length(test_single_dist) == 1
         @test size(test_single_dist) == ()
         @test eltype(typeof(test_single_dist)) == SFourMomentum
