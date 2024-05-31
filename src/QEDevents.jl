@@ -21,6 +21,9 @@ using QEDprocesses
 using DocStringExtensions
 
 include("interfaces/sampler_interface.jl")
-include("interfaces/particle_distribution_interface.jl")
+include("interfaces/particle_distributions/types.jl")
+include("interfaces/particle_distributions/interface.jl")
+include("interfaces/particle_distributions/properties.jl")
+include("interfaces/particle_distributions/generics.jl")
 
 end
