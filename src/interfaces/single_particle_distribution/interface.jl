@@ -5,7 +5,11 @@
 
 Interface function to be implemented. Return the particle associated with the given distribution.
 """
-function particle end
+function _particle end
+
+_particle_direction(::SingleParticleDistribution) = UnknownDirection
+
+_momentum_type(::SingleParticleDistribution) = SFourMomentum
 
 # TODO: refac sampler interface (maybe remove in favor to this)
 """
@@ -23,3 +27,11 @@ TBW
 TBW
 """
 #max_weight
+
+####
+# derived functionality
+####
+
+function Base.eltype(s::SingleParticleDistribution)
+    return ParticleStateful{_particle_direction(s),_particle(s),_momentum_type(s)}
+end
