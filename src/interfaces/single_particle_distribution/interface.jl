@@ -1,7 +1,7 @@
 
 """
 
-    particle(::SingleParticleDistribution)
+    particle(::Type{SingleParticleDistribution})
 
 Interface function to be implemented. Return the particle associated with the given distribution.
 """

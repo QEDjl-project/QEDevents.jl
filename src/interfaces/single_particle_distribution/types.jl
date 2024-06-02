@@ -30,4 +30,5 @@ Broadcast.broadcastable(d::SingleParticleDistribution) = Ref(d)
 
 Base.length(::Sampleable{SingleParticleVariate}) = 1
 Base.size(::Sampleable{SingleParticleVariate}) = ()
-Base.eltype(::Type{<:Sampleable{SingleParticleVariate,Continuous}}) = SFourMomentum
+#Base.eltype(::Type{<:Sampleable{SingleParticleVariate,Continuous}}) = SFourMomentum
+Base.eltype(::Sampleable{SingleParticleVariate,Continuous}) = SFourMomentum
