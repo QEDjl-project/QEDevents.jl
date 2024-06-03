@@ -22,7 +22,7 @@ Abstract base type for general sampler.
     QEDevents._rand!(rng::AbstractRNG, ::AbstractSampler, x::AbstractVector{T}) where {T}
 
     ```
-    
+
     optional
 
     ```Julia
@@ -61,11 +61,11 @@ end
 Interface function, which returns the weight associated with the given sample according to the sampler.
 
 !!! note ""
-    
+
     This function must not do input validation. This is done by [`weight`](@ref), which calls `_weight` after input validation.
 
 """
-function _weight end
+_weight
 
 """
 
@@ -81,9 +81,9 @@ function setup end
 
 Interface function, which returns whether the sampler is exactly representing the base distribution or not.
 """
-function is_exact end
+is_exact
 
-"""   
+"""
 
     $(TYPEDSIGNATURES)
 
@@ -139,4 +139,4 @@ physical_model(smplr::AbstractScatteringProcessSampler) = physical_model(setup(s
 
 Interface function, which returns the maximum possible weight for the sampler.
 """
-function max_weight end
+max_weight

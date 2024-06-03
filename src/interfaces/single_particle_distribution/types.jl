@@ -9,15 +9,15 @@ Base type for sample drawing from single particle distributions. The following i
 should be implemented:
 
 ```julia
-    QEDevents.particle(d::SingleParticleDistribution)
-    Distributions.rand(rng::AbstractRNG,d::SingleParticleDistribution) -> SFourMomentum
-    QEDevents._weight(d::SingleParticleDistribution,x::SFourMomentum) -> <: Real
+    QEDevents._particle(d::SingleParticleDistribution)
+    Distributions.rand(rng::AbstractRNG,d::SingleParticleDistribution)
+    QEDevents._weight(d::SingleParticleDistribution,x::SFourMomentum)
 ```
 
 Optional:
 
 ```julia
-    QEDevents.direction(d::SingleParticleDistribution)
+    QEDevents._particle_direction(d::SingleParticleDistribution)
     QEDevents._assert_valid_input(d::SingleParticleDistribution,x::SFourMomentum)
     QEDevents._post_processing(d::SingleParticleDistribution,x::SFourMomentum,out::Real)
     QEDevents.max_weight(d::SingleParticleDistribution)
