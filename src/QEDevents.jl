@@ -9,7 +9,7 @@ export AbstractSampler,
     max_weight
 
 export ParticleDistribution
-export SingleParticleDistribution, particle
+export SingleParticleDistribution
 
 import Random: AbstractRNG, MersenneTwister
 import Distributions: rand, rand!, _rand!

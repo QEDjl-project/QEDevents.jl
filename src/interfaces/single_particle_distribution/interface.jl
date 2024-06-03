@@ -1,13 +1,13 @@
 
 """
 
-    particle(::Type{SingleParticleDistribution})
+    _particle(::Type{SingleParticleDistribution})
 
 Interface function to be implemented. Return the particle associated with the given distribution.
 """
 function _particle end
 
-_particle_direction(::SingleParticleDistribution) = UnknownDirection
+_particle_direction(::SingleParticleDistribution) = UnknownDirection()
 
 _momentum_type(::SingleParticleDistribution) = SFourMomentum
 
@@ -33,5 +33,7 @@ TBW
 ####
 
 function Base.eltype(s::SingleParticleDistribution)
-    return ParticleStateful{_particle_direction(s),_particle(s),_momentum_type(s)}
+    return ParticleStateful{
+        typeof(_particle_direction(s)),typeof(_particle(s)),_momentum_type(s)
+    }
 end
