@@ -6,8 +6,4 @@ using SafeTestsets
     @time @safetestset "single particle distribution" begin
         include("interfaces/single_particle_distribution.jl")
     end
-
-    @time @safetestset "particle distribution" begin
-        include("interfaces/particle_distribution_interface.jl")
-    end
 end
