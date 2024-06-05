@@ -1,3 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 QEDevents = "fc3ce04a-5be5-4f3a-acff-eceaab723759"
+QEDprocesses = "46de9c38-1bb3-4547-a1ec-da24d767fdad"
