@@ -53,7 +53,7 @@ function _assert_valid_input_type(
         throw(InvalidInputError("expected $(_particle_direction(d)) but got $D"))
 
     eltype(_particle(d)) == P ||
-           throw(InvalidInputError("expected $(_particle(d)) but got $P"))
+        throw(InvalidInputError("expected $(_particle(d)) but got $P"))
 
     return nothing
 end
