@@ -7,7 +7,7 @@ abstract type QEDlikeVariate <: Distributions.VariateForm end
 
 Auxiliary type to represent the number of axes in the space of all particles:
 
-* `N == 0` single particle vairate
+* `N == 0` single particle variate
 * `N == 1` multiple particle variate
 
 """
@@ -54,7 +54,7 @@ samples for properties of given particles, like four-momentum, spin, polarizatio
 
 To implement the particle-sampleable interface, the following functions need to be given:
 
-* `Base.eltype(s::ParticleSampleable)`: return the most inner type of the samples
+* `Base.eltype(s::ParticleSampleable)`: return the innermost type of the samples
 * [`_weight(s::ParticleSampleable,x)`](@ref): return the weight of a given sample `x`
 * [`is_exact(s::ParticleSampleable)`](@ref): return wether or not a particle-sampleable is exact
 
@@ -199,7 +199,7 @@ function is_exact end
 """
     weight(d::ParticleSampleable, sample)
 
-Return the weight of the given sample accoring to the given distribution.
+Return the weight of the given sample according to the given distribution.
 
 This function automatically performs input validation and post-processing using the respective interface functions.
 The order of calls is

@@ -52,8 +52,10 @@ function _assert_valid_input_type(
     eltype(_particle_direction(d)) == D ||
         throw(InvalidInputError("expected $(_particle_direction(d)) but got $D"))
 
-    return eltype(_particle(d)) == P ||
+    eltype(_particle(d)) == P ||
            throw(InvalidInputError("expected $(_particle(d)) but got $P"))
+
+    return nothing
 end
 
 # used for pre-allocation of vectors of particle-stateful
