@@ -6,9 +6,9 @@
 Base type for sample drawing from single particle distributions. The following interface functions
 should be implemented:
 
-
-* [`QEDevents._particle(d::SingleParticleDistribution)`](@ref)
-* [`QEDevents._particle_direction(d::SingleParticleDistribution)`](@ref)
+* [`QEDevents._particle(d::SingleParticleDistribution)`](@ref): return associated particle
+* [`QEDevents._particle_direction(d::SingleParticleDistribution)`](@ref): return associated particle direction
+* `Distributions.rand(rng::AbstractRNG,d::SingleParticleDistribution)`: return random sample as a `ParticleStateful`
 
 """
 const SingleParticleDistribution = ParticleSampleable{SingleParticleVariate}
@@ -49,11 +49,11 @@ Interface function, which asserts that the given `input` is valid.
 function _assert_valid_input_type(
     d::SingleParticleDistribution, x::ParticleStateful{D,P}
 ) where {D,P}
-    eltype(_particle_direction(d)) == D ||
-        throw(InvalidInputError("expected $(_particle_direction(d)) but got $D"))
+    typeof(_particle_direction(d)) == D ||
+        throw(InvalidInputError("expected $(typeof(_particle_direction(d))) but got $D"))
 
-    eltype(_particle(d)) == P ||
-        throw(InvalidInputError("expected $(_particle(d)) but got $P"))
+    typeof(_particle(d)) == P ||
+        throw(InvalidInputError("expected $(typeof(_particle(d))) but got $P"))
 
     return nothing
 end

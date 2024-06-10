@@ -17,6 +17,8 @@ ATOL = 0.0
 RTOL = sqrt(eps())
 
 test_particle = rand(RNG, TestImpl.PARTICLE_SET)
+struct WrongParticle <: AbstractParticleType end # for type checking in weight
+struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
@@ -84,6 +86,31 @@ end
                 @test all(psf_rng == psf_prealloc_rng)
                 @test all(psf_rng == psf_prealloc_default)
             end
+        end
+    end
+
+    @testset "weights" begin
+        @testset "evaluation" begin
+            test_input = rand(RNG, test_dist)
+            @test weight(test_dist, test_input) ==
+                TestImpl._groundtruth_single_weight(test_dist, test_input)
+        end
+
+        @testset "fails" begin
+            # failing inputs with either wrong particle, wrong direction or both
+            psf_wrong_particle = ParticleStateful(
+                dir, WrongParticle(), rand(RNG, SFourMomentum)
+            )
+            psf_wrong_direction = ParticleStateful(
+                WrongDirection(), test_particle, rand(RNG, SFourMomentum)
+            )
+            psf_wrong = ParticleStateful(
+                WrongDirection(), WrongParticle(), rand(RNG, SFourMomentum)
+            )
+
+            @test_throws InvalidInputError weight(test_dist, psf_wrong_particle)
+            @test_throws InvalidInputError weight(test_dist, psf_wrong_direction)
+            @test_throws InvalidInputError weight(test_dist, psf_wrong)
         end
     end
 end

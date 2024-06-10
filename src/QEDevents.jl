@@ -1,5 +1,7 @@
 module QEDevents
 
+export weight
+
 export SingleParticleDistribution
 
 import Random: AbstractRNG

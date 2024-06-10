@@ -27,5 +27,5 @@ function Distributions.rand(rng::AbstractRNG, d::TestSingleParticleDist)
 end
 
 function QEDevents._weight(d::TestSingleParticleDist, x::ParticleStateful)
-    return _groundtruth_weight(d, x)
+    return _groundtruth_single_weight(d, x)
 end
