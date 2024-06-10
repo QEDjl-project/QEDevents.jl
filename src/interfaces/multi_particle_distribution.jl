@@ -15,7 +15,7 @@ const MultiParticleDistribution = ParticleSampleable{MultiParticleVariate}
 Broadcast.broadcastable(d::MultiParticleDistribution) = Ref(d)
 
 Base.length(d::MultiParticleDistribution) = length(_particles(d))
-Base.size(d::SingleParticleDistribution) = (length(d),)
+Base.size(d::MultiParticleDistribution) = (length(d),)
 
 """
     _particle(dist::MultiParticleDistribution)
@@ -45,6 +45,47 @@ function _particle_direction(d::MultiParticleDistribution)
     return Tuple(fill(UnknownDirection(), length(d)))
 end
 
+# recursion termination: success
+@inline _recursive_type_check(::Tuple{}, ::Tuple{}, ::Tuple{}) = nothing
+
+# recursion termination: overload for unequal number of particles
+@inline function _recursive_type_check(
+    ::Tuple{Vararg{ParticleStateful,N}},
+    ::Tuple{Vararg{AbstractParticleType,M}},
+    ::Tuple{Vararg{ParticleDirection,M}},
+) where {N,M}
+    throw(InvalidInputError("expected $(M) particles but got $(N)"))
+    return nothing
+end
+
+# recursion termination: overload for invalid types
+@inline function _recursive_type_check(
+    ::Tuple{ParticleStateful{DIR_IN_T,SPECIES_IN_T},Vararg{ParticleStateful,N}},
+    ::Tuple{SPECIES_T,Vararg{AbstractParticleType,N}},
+    ::Tuple{DIR_T,Vararg{ParticleDirection,N}},
+) where {
+    N,
+    DIR_IN_T<:ParticleDirection,
+    DIR_T<:ParticleDirection,
+    SPECIES_IN_T<:AbstractParticleType,
+    SPECIES_T<:AbstractParticleType,
+}
+    throw(
+        InvalidInputError(
+            "expected $(DIR_T()) $(SPECIES_T()) but got $(DIR_IN_T()) $(SPECIES_IN_T())"
+        ),
+    )
+    return nothing
+end
+
+@inline function _recursive_type_check(
+    t::Tuple{ParticleStateful{DIR_T,SPECIES_T},Vararg{ParticleStateful,N}},
+    p::Tuple{SPECIES_T,Vararg{AbstractParticleType,N}},
+    dir::Tuple{DIR_T,Vararg{ParticleDirection,N}},
+) where {N,DIR_T<:ParticleDirection,SPECIES_T<:AbstractParticleType}
+    return _recursive_type_check(t[2:end], p[2:end], dir[2:end])
+end
+
 """
 Interface function, which asserts that the given `input` is valid.
 """
@@ -52,6 +93,7 @@ function _assert_valid_input_type(
     d::MultiParticleDistribution, x::PS
 ) where {PS<:Tuple{Vararg{ParticleStateful}}}
     # TODO: implement correct type check
+    _recursive_type_check(x, _particles(d), _particle_directions(d))
     return nothing
 end
 
@@ -72,8 +114,6 @@ end
 # used for pre-allocation of vectors of particle-stateful
 function Base.eltype(d::MultiParticleDistribution)
     return Tuple{
-        _assemble_tuple_types(
-            _particles(d), _particle_directions(d), QEDevents._momentum_type(d)
-        )...,
+        _assemble_tuple_types(_particles(d), _particle_directions(d), _momentum_type(d))...
     }
 end
