@@ -42,11 +42,16 @@ end
     @testset "single sample" begin
         Random.seed!(RND_SEED)
         rng = default_rng()
+        psf_groundtruth = TestImpl._groundtruth_single_rand(rng, test_dist)
+
+        Random.seed!(RND_SEED)
+        rng = default_rng()
         psf_rng = @inferred rand(rng, test_dist)
 
         Random.seed!(RND_SEED)
         psf_default = @inferred rand(test_dist)
 
+        @test psf_groundtruth == psf_rng
         @test psf_rng == psf_default
     end
 
