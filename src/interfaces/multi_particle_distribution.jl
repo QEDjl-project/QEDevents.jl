@@ -48,17 +48,32 @@ end
 """
 Interface function, which asserts that the given `input` is valid.
 """
-#=
 function _assert_valid_input_type(
     d::MultiParticleDistribution, x::PS
-) where {
-        PS <: Tuple{Vararg{ParticleStateful}
-    }
+) where {PS<:Tuple{Vararg{ParticleStateful}}}
     # TODO: implement correct type check
-    nothing
+    return nothing
 end
-=#
+
+# recursion termination: base case
+@inline _assemble_tuple_types(::Tuple{}, ::Tuple{}, ::Type) = ()
+
+@inline function _assemble_tuple_types(
+    particle_types::Tuple{SPECIES_T,Vararg{AbstractParticleType}},
+    dir::Tuple{DIR_T,Vararg{ParticleDirection}},
+    ELTYPE::Type,
+) where {SPECIES_T<:AbstractParticleType,DIR_T<:ParticleDirection}
+    return (
+        ParticleStateful{DIR_T,SPECIES_T,ELTYPE},
+        _assemble_tuple_types(particle_types[2:end], dir[2:end], ELTYPE)...,
+    )
+end
 
 # used for pre-allocation of vectors of particle-stateful
-# todo: use `_assemble_tuple_type` from QEDprocesses
-# function Base.eltype(s::MultiParticleDistribution) end
+function Base.eltype(d::MultiParticleDistribution)
+    return Tuple{
+        _assemble_tuple_types(
+            _particles(d), _particle_directions(d), QEDevents._momentum_type(d)
+        )...,
+    }
+end
