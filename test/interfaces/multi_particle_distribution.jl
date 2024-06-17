@@ -55,7 +55,11 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
     @testset "single sample" begin
         Random.seed!(RND_SEED)
         rng = default_rng()
-        psf_groundtruth = TestImpl._groundtruth_multi_rand(rng, test_dist)
+        moms_groundtruth = TestImpl._groundtruth_multi_randmom(rng, test_dist)
+        psf_groundtruth = Tuple(
+            ParticleStateful(test_directions[i], test_particles[i], moms_groundtruth[i]) for
+            i in 1:N
+        )
 
         Random.seed!(RND_SEED)
         rng = default_rng()
@@ -67,7 +71,6 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
         @test psf_groundtruth == psf_rng
         @test psf_rng == psf_default
     end
-
     @testset "multiple samples" begin
         @testset "$dim" for dim in (1, 2, 3)
             checked_lengths = (1, rand(RNG, 1:10))

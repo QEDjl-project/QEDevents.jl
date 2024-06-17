@@ -18,10 +18,8 @@ end
 
 QEDevents._particle_directions(d::TestMultiParticleDist) = d.dirs
 
-function Distributions.rand(
-    rng::AbstractRNG, d::TestMultiParticleDist{DT,PT,RT}
-)::RT where {DT,PT,RT}
-    return _groundtruth_multi_rand(rng, d)
+function QEDevents.randmom(rng::AbstractRNG, d::TestMultiParticleDist)
+    return _groundtruth_multi_randmom(rng, d)
 end
 
 function QEDevents._weight(d::TestMultiParticleDist, x::Tuple{Vararg{ParticleStateful}})
