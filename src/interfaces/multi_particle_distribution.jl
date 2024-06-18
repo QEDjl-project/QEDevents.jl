@@ -6,8 +6,9 @@
 Base type for sample drawing from multiple particle distributions. The following interface functions
 should be implemented:
 
-* [`QEDevents._particles(d::MultiParticleDistribution)`](@ref): return
+* [`QEDevents._particles(d::MultiParticleDistribution)`](@ref)
 * [`QEDevents._particle_directions(d::MultiParticleDistribution)`](@ref)
+* [`QEDevents.randmom(rng::AbstractRNG,d::MultiParticleDistribution)`](@ref)
 
 """
 const MultiParticleDistribution = ParticleSampleable{MultiParticleVariate}
@@ -132,5 +133,5 @@ function Distributions.rand(rng::AbstractRNG, d::MultiParticleDistribution)
     dirs = _particle_directions(d)
     parts = _particles(d)
 
-    return out = ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
+    return ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
 end
