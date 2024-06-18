@@ -3,7 +3,7 @@ using Test
 using SafeTestsets
 
 @testset "QEDevents.jl" begin
-    @time @safetestset "sampler interfaces" begin
-        include("interfaces/sampler_interface.jl")
+    @time @safetestset "single particle distribution" begin
+        include("interfaces/single_particle_distribution.jl")
     end
 end
