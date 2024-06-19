@@ -5,9 +5,8 @@ using QEDbase
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
 
-# only imported, because we want to test,
-# if QEDevents works without this (epsecially the Base.rand which is exported by
-# Distributions)
+# only imported because we want to test if QEDevents works without this 
+# (especially the Base.rand, which is exported by Distributions)
 using Distributions: Distributions
 
 include("../test_implementation/TestImpl.jl")
@@ -43,6 +42,7 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
 
         # todo: consider to move _assemble_tuple_types to the test implementation
         # (groundtruths must not rely on package internals)
+        # See https://github.com/QEDjl-project/QEDprocesses.jl/issues/75
         @test @inferred eltype(test_dist) == Tuple{
             QEDevents._assemble_tuple_types(
                 QEDevents._particles(test_dist),
