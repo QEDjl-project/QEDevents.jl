@@ -78,5 +78,5 @@ end
 function QEDprocesses._total_probability(
     in_psp::InPhaseSpacePoint{<:TestProcess,<:TestModel,<:TestPhasespaceDef}
 )
-    return _groundtruth_total_probability(momenta(in_psp, Incoming()))
+    return _groundtruth_total_probability(momenta(in_psp, QEDbase.Incoming()))
 end

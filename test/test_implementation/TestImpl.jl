@@ -1,6 +1,7 @@
 module TestImpl
 
-using QEDbase
+using QEDbase: QEDbase
+using QEDcore
 using QEDprocesses
 using QEDevents
 using Distributions

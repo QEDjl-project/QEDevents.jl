@@ -1,6 +1,7 @@
 using QEDprocesses
 using QEDevents
-using QEDbase
+using QEDbase: QEDbase
+using QEDcore
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
 
@@ -17,10 +18,10 @@ ATOL = 0.0
 RTOL = sqrt(eps())
 
 test_particle = rand(RNG, TestImpl.PARTICLE_SET)
-struct WrongParticle <: AbstractParticleType end # for type checking in weight
-struct WrongDirection <: ParticleDirection end # for type checking in weight
+struct WrongParticle <: QEDbase.AbstractParticleType end # for type checking in weight
+struct WrongDirection <: QEDbase.ParticleDirection end # for type checking in weight
 
-DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
+DIRECTIONS = (QEDbase.Incoming(), QEDbase.Outgoing(), QEDevents.UnknownDirection())
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
 
 @testset "default properties" begin
