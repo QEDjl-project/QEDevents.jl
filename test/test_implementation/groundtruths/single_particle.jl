@@ -6,5 +6,5 @@ function _groundtruth_single_rand(rng, dist)
 end
 
 function _groundtruth_single_weight(dist, x::ParticleStateful)
-    return getE(momentum(x))
+    return QEDbase.getE(momentum(x))
 end
