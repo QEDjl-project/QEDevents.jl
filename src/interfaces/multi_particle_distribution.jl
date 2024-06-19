@@ -50,7 +50,7 @@ end
 
     randmom(rng::AbstractRNG,d::MultiParticleDistribution)
 
-Return an iteratable container (e.g. vector or tuple) of momenta according to the distribution `d`.
+Return an iterable container (e.g. vector or tuple) of momenta according to the distribution `d`.
 """
 function randmom end
 
