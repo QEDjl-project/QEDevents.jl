@@ -1,5 +1,6 @@
 
 # dummy particles
+struct TestParticle <: AbstractParticleType end # generic particle
 struct TestParticleFermion <: FermionLike end
 struct TestParticleBoson <: BosonLike end
 
