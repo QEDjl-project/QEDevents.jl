@@ -5,7 +5,7 @@ using QEDbase
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
 
-# only imported because we want to test if QEDevents works without this 
+# only imported because we want to test if QEDevents works without this
 # (especially the Base.rand, which is exported by Distributions)
 using Distributions: Distributions
 
@@ -73,7 +73,7 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
     end
     @testset "multiple samples" begin
         @testset "$dim" for dim in (1, 2, 3)
-            checked_lengths = (1, rand(RNG, 1:10))
+            checked_lengths = (1, 2, rand(RNG, 3:10))
             shapes = Iterators.product(fill(checked_lengths, dim)...)
 
             @testset "$shape" for shape in shapes

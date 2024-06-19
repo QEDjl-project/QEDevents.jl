@@ -10,8 +10,6 @@ struct TestMultiParticleDist{DT<:Tuple,PT<:Tuple,RT} <: MultiParticleDistributio
     end
 end
 
-#Base.length(d::TestMultiParticleDist) = length(d.parts)
-
 function QEDevents._particles(d::TestMultiParticleDist)
     return d.parts
 end
