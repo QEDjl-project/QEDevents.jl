@@ -19,7 +19,7 @@ Base.length(::SingleParticleDistribution) = 1
 Base.size(::SingleParticleDistribution) = ()
 
 """
-    _particle(dist::SingleParticleDistribution)::QEDbase.AbstractParticle
+    _particle(dist::SingleParticleDistribution)::AbstractParticle
 
 Return the particle associated with the `dist`.
 
@@ -31,7 +31,7 @@ Return the particle associated with the `dist`.
 function _particle end
 
 """
-    _particle_direction(dist::SingleParticleDistribution)::QEDbase.ParticleDirection
+    _particle_direction(dist::SingleParticleDistribution)::ParticleDirection
 
 Return the particle-direction of the particle associated with `dist`.
 !!! note

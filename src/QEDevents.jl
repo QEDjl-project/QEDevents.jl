@@ -9,9 +9,8 @@ import Random: AbstractRNG
 import Distributions: rand, rand!, _rand!
 using Distributions: Distributions
 
-using QEDbase: QEDbase
+using QEDbase
 using QEDcore
-using QEDprocesses
 
 using DocStringExtensions
 

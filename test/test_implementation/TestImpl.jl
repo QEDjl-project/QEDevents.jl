@@ -1,8 +1,7 @@
 module TestImpl
 
-using QEDbase: QEDbase
+using QEDbase
 using QEDcore
-using QEDprocesses
 using QEDevents
 using Distributions
 import Random: AbstractRNG

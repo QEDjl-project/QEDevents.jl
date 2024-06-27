@@ -1,5 +1,5 @@
 
-PARTICLE_DIRECTIONS = (QEDbase.Incoming(), QEDbase.Outgoing(), QEDevents.UnknownDirection())
+PARTICLE_DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 
 struct TestMultiParticleDist{DT<:Tuple,PT<:Tuple,RT} <: MultiParticleDistribution
     dirs::DT
