@@ -10,13 +10,11 @@ struct TestSingleParticleDist{D,P,T} <: SingleParticleDistribution
     mom_type::Type{T}
 end
 
-function TestSingleParticleDist(part::QEDbase.AbstractParticleType)
+function TestSingleParticleDist(part::AbstractParticleType)
     return TestSingleParticleDist(QEDevents.UnknownDirection(), part, SFourMomentum)
 end
 
-function TestSingleParticleDist(
-    dir::QEDbase.ParticleDirection, part::QEDbase.AbstractParticleType
-)
+function TestSingleParticleDist(dir::ParticleDirection, part::AbstractParticleType)
     return TestSingleParticleDist(dir, part, SFourMomentum)
 end
 

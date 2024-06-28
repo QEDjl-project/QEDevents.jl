@@ -3,5 +3,5 @@ function _groundtruth_multi_randmom(rng, d)
 end
 
 function _groundtruth_multi_weight(dist, psfs)
-    @. QEDbase.getE(momentum(psfs))
+    @. getE(momentum(psfs))
 end

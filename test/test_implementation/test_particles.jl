@@ -1,6 +1,6 @@
 
 # dummy particles
-struct TestParticle <: QEDbase.AbstractParticleType end # generic particle
+struct TestParticle <: AbstractParticleType end # generic particle
 struct TestParticleFermion <: FermionLike end
 struct TestParticleBoson <: BosonLike end
 
