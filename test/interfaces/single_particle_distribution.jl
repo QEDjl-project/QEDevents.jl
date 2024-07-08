@@ -41,50 +41,68 @@ end
             ParticleStateful{typeof(dir),typeof(test_particle),SFourMomentum}
     end
 
-    @testset "single sample" begin
-        Random.seed!(RND_SEED)
-        rng = default_rng()
-        psf_groundtruth = TestImpl._groundtruth_single_rand(rng, test_dist)
+    @testset "randmom" begin
+        @testset "single sample" begin
+            Random.seed!(RND_SEED)
+            rng = default_rng()
+            mom_groundtruth = TestImpl._groundtruth_single_randmom(rng, test_dist)
 
-        Random.seed!(RND_SEED)
-        rng = default_rng()
-        psf_rng = @inferred rand(rng, test_dist)
+            Random.seed!(RND_SEED)
+            rng = default_rng()
+            mom_rng = @inferred QEDevents._randmom(rng, test_dist)
 
-        Random.seed!(RND_SEED)
-        psf_default = @inferred rand(test_dist)
-
-        @test psf_groundtruth == psf_rng
-        @test psf_rng == psf_default
+            @test mom_groundtruth == mom_rng
+        end
     end
 
-    @testset "multiple samples" begin
-        @testset "$dim" for dim in (1, 2, 3)
-            checked_lengths = (1, rand(RNG, 1:10))
-            shapes = Iterators.product(fill(checked_lengths, dim)...)
+    @testset "rand" begin
+        @testset "single sample" begin
+            Random.seed!(RND_SEED)
+            rng = default_rng()
+            mom_groundtruth = TestImpl._groundtruth_single_randmom(rng, test_dist)
+            psf_groundtruth = ParticleStateful(dir, test_particle, mom_groundtruth)
 
-            @testset "$shape" for shape in shapes
-                Random.seed!(RND_SEED)
-                rng = default_rng()
-                psf_rng = @inferred rand(rng, test_dist, shape...)
+            Random.seed!(RND_SEED)
+            rng = default_rng()
+            psf_rng = @inferred rand(rng, test_dist)
 
-                Random.seed!(RND_SEED)
-                psf_default = @inferred rand(test_dist, shape...)
+            Random.seed!(RND_SEED)
+            psf_default = @inferred rand(test_dist)
 
-                Random.seed!(RND_SEED)
-                rng = default_rng()
-                mom_prealloc_rng = Array{SFourMomentum}(undef, shape...)
-                psf_prealloc_rng = ParticleStateful.(dir, test_particle, mom_prealloc_rng)
-                @inferred Random.rand!(rng, test_dist, psf_prealloc_rng)
+            @test psf_groundtruth == psf_rng
+            @test psf_rng == psf_default
+        end
 
-                Random.seed!(RND_SEED)
-                mom_prealloc_default = Array{SFourMomentum}(undef, shape)
-                psf_prealloc_default =
-                    ParticleStateful.(dir, test_particle, mom_prealloc_default)
-                @inferred Random.rand!(test_dist, psf_prealloc_default)
+        @testset "multiple samples" begin
+            @testset "$dim" for dim in (1, 2, 3)
+                checked_lengths = (1, rand(RNG, 1:10))
+                shapes = Iterators.product(fill(checked_lengths, dim)...)
 
-                @test all(psf_rng == psf_default)
-                @test all(psf_rng == psf_prealloc_rng)
-                @test all(psf_rng == psf_prealloc_default)
+                @testset "$shape" for shape in shapes
+                    Random.seed!(RND_SEED)
+                    rng = default_rng()
+                    psf_rng = @inferred rand(rng, test_dist, shape...)
+
+                    Random.seed!(RND_SEED)
+                    psf_default = @inferred rand(test_dist, shape...)
+
+                    Random.seed!(RND_SEED)
+                    rng = default_rng()
+                    mom_prealloc_rng = Array{SFourMomentum}(undef, shape...)
+                    psf_prealloc_rng =
+                        ParticleStateful.(dir, test_particle, mom_prealloc_rng)
+                    @inferred Random.rand!(rng, test_dist, psf_prealloc_rng)
+
+                    Random.seed!(RND_SEED)
+                    mom_prealloc_default = Array{SFourMomentum}(undef, shape)
+                    psf_prealloc_default =
+                        ParticleStateful.(dir, test_particle, mom_prealloc_default)
+                    @inferred Random.rand!(test_dist, psf_prealloc_default)
+
+                    @test all(psf_rng == psf_default)
+                    @test all(psf_rng == psf_prealloc_rng)
+                    @test all(psf_rng == psf_prealloc_default)
+                end
             end
         end
     end
