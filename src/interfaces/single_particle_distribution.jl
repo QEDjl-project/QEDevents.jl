@@ -8,7 +8,7 @@ should be implemented:
 
 * [`QEDevents._particle(d::SingleParticleDistribution)`](@ref): return associated particle
 * [`QEDevents._particle_direction(d::SingleParticleDistribution)`](@ref): return associated particle direction
-* `Distributions.rand(rng::AbstractRNG,d::SingleParticleDistribution)`: return random sample as a `ParticleStateful`
+* [`QEDevents._randmom(d::SingleParticleDistribution)`](@ref): return momentum according to `d`
 
 """
 const SingleParticleDistribution = ParticleSampleable{SingleParticleVariate}
@@ -64,4 +64,9 @@ function Base.eltype(s::SingleParticleDistribution)
     return ParticleStateful{
         typeof(_particle_direction(s)),typeof(_particle(s)),_momentum_type(s)
     }
+end
+
+function Distributions.rand(rng::AbstractRNG, d::SingleParticleDistribution)
+    rnd_momentum = _randmom(rng, d)
+    return ParticleStateful(_particle_direction(d), _particle(d), rnd_momentum)
 end

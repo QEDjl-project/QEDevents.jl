@@ -69,10 +69,18 @@ the generation of samples by implementing
 
 * [`_momentum_type(s::ParticleSampleable)`](@ref): return the momentum type used
 
-The actual sampling function depends on the variate form:
+For the actual sampling, one must implement
 
-!!! note "Single particle sampler"
-    For `SingleParticleVariate`samplers, one needs to implement the single sample version `rand`:
+* [`_randmom(d::ParticleSampleable)`](@ref): return momenta according to `d`
+
+Using these interface functions, the following versions `rand` function are implemented.
+However, if in the particular case, there are more sophisticated implementations for the
+respective version of the `rand` function (see below), they can be implemented instead of `_randmom`.
+Nevertheless, in this case, it is recommended for convenience to implement a `_randmom` function as well, maybe
+using the result of `rand`.
+
+!!! note "Single particle distribution"
+    For `SingleParticleVariate`samplers, the single sample version `rand` is given:
 
     ```julia
     Distributions.rand(
@@ -81,13 +89,8 @@ The actual sampling function depends on the variate form:
     ```
     which returns a random sample from `s` as a `ParticleStateful`.
 
-!!! note "Multiple particle sampler"
-    For `MultiParticleVariate` samplers, one needs to implement
-
-    ```julia
-    Base.size(s::ParticleSampleable{MultiParticleVariate})
-    ```
-    and the mutating version of `rand`:
+!!! note "Multiple particle distribution"
+    For `MultiParticleVariate` samplers, the mutating version of `rand` implemented:
 
     ```julia
     Distributions._rand!(
@@ -95,16 +98,17 @@ The actual sampling function depends on the variate form:
         s::ParticleSampleable{MultiParticleVariate},
         out::AbstractArray{ParticleStateful})
     ```
+    which also provides implementations of `rand` for one or more samples.
 
-!!! note "Scattering process sampler"
-    For `ProcessLikeVariate` samplers, one needs to give the single sampler version of `rand`:
+!!! note "Scattering process distribution"
+    For `ProcessLikeVariate` distributions, the single sample version of `rand` is given:
 
     ```julia
     Distributions.rand(
         rng::Random.AbstractRNG,
-        s::ParticleSampleable{SingleParticleVariate})
+        s::ParticleSampleable{ProcessLikeVariate})
     ```
-    which must a random sample from `s` as a `PhaseSpacePoint` of the respective scattering process.
+    which returns a `PhaseSpacePoint` including the respective scattering process, computation model and phase-space definition.
 
 """
 abstract type ParticleSampleable{F<:QEDlikeVariate} <:
@@ -123,6 +127,32 @@ Return the momentum type used for the generation of samples. The default is `SFo
 function _momentum_type(s::ParticleSampleable)
     return SFourMomentum
 end
+
+"""
+
+    _randmom(rng::AbstractRNG,d::ParticleSampleable)
+
+Return random momentum/momenta according to the distribution `d`. The momentum type used in the return must
+be equal to the one returned by [`_momentum_type`](@ref).
+
+The actual return type for `_randmom` depends on the variate form.
+
+!!! note "Single particle distributions"
+
+    The `_randmom` function must return a single momentum, which type is the same as retured by [`_momentum_type`](@ref)
+
+!!! note "Multiple particle distribution"
+
+    For a set of particles, the `_randmom` function must return an iterable container of momenta (e.g. a tuple or vector), which length is the same
+    as the number of particles according to the distribution. The element type of this container must be the same as returned by [`_momentum_type`](@ref).
+
+!!! note "Scattering process distributions"
+
+    For scattering processes, the `_randmom` function must return two iterable containers of momenta, one for the incoming and one for the outgoing particles.
+    The momentum type in both of the containers must be the same as returned by [`_momentum_type`](@ref).
+
+"""
+function _randmom end
 
 """
     _assert_valid_input_type(s::ParticleSampleable,x)
