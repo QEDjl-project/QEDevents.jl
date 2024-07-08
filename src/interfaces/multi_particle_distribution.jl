@@ -46,14 +46,6 @@ function _particle_direction(d::MultiParticleDistribution)
     return Tuple(fill(UnknownDirection(), length(d)))
 end
 
-"""
-
-    _randmom(rng::AbstractRNG,d::MultiParticleDistribution)
-
-Return an iterable container (e.g. vector or tuple) of momenta according to the distribution `d`.
-"""
-function _randmom end
-
 # recursion termination: success
 @inline _recursive_type_check(::Tuple{}, ::Tuple{}, ::Tuple{}) = nothing
 
