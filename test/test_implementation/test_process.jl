@@ -8,8 +8,8 @@ struct TestProcess{IP<:Tuple,OP<:Tuple} <: AbstractProcessDefinition
 end
 
 function TestProcess(rng::AbstractRNG, N_in::Int, N_out::Int)
-    in_particles = rand(rng, PARTICLE_SET, N_in)
-    out_particles = rand(rng, PARTICLE_SET, N_out)
+    in_particles = Tuple(rand(rng, PARTICLE_SET, N_in))
+    out_particles = Tuple(rand(rng, PARTICLE_SET, N_out))
     return TestProcess(in_particles, out_particles)
 end
 

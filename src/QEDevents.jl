@@ -14,6 +14,8 @@ using QEDcore
 
 using DocStringExtensions
 
+include("utils.jl")
+
 include("interfaces/particle_distribution.jl")
 include("interfaces/single_particle_distribution.jl")
 include("interfaces/multi_particle_distribution.jl")
