@@ -93,4 +93,39 @@ TESTPSDEF = TestImpl.TestPhasespaceDef()
             end
         end
     end
+
+    @testset "weights" begin
+        @testset "evaluation" begin
+            test_input = rand(RNG, test_dist)
+            @test @inferred weight(test_dist, test_input) ==
+                TestImpl._groundtruth_process_weight(test_dist, test_input)
+        end
+        @testset "fails" begin
+            WRONG_TESTPROC = TestImpl.WrongTestProcess(
+                INCOMING_PARTICLES, OUTGOING_PARTICLES
+            )
+            WRONG_TESTMODEL = TestImpl.WrongTestModel()
+            WRONG_TESTPSDEF = TestImpl.WrongTestPhasespaceDef()
+
+            invalid_combs = [
+                (proc, model, ps_def) for (proc, model, ps_def) in Iterators.product(
+                    (TESTPROC, WRONG_TESTPROC),
+                    (TESTMODEL, WRONG_TESTMODEL),
+                    (TESTPSDEF, WRONG_TESTPSDEF),
+                ) if !TestImpl._all_valid(proc, model, ps_def)
+            ]
+
+            correct_in_moms, correct_out_moms = QEDevents._randmom(RNG, test_dist)
+
+            @testset "$test_proc $test_model $test_ps_def" for (
+                test_proc, test_model, test_ps_def
+            ) in invalid_combs
+                wrong_input = PhaseSpacePoint(
+                    test_proc, test_model, test_ps_def, correct_in_moms, correct_out_moms
+                )
+
+                @test_throws InvalidInputError weight(test_dist, wrong_input)
+            end
+        end
+    end
 end

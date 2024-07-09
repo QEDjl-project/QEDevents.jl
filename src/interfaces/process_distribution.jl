@@ -1,4 +1,4 @@
-
+#TODO: fix the links
 """
 
   ScatteringProcessDistribution
@@ -6,10 +6,10 @@
 Base type for sample drawing from scattering process distributions. The following interface functions
 should be implemented:
 
-* [`QEDbase.process(d::ScatteringProcessDistribution)`](@ref)
-* [`QEDbase.model(d::ScatteringProcessDistribution)`](@ref)
-* [`QEDbase.phase_space_definition(d::ScatteringProcessDistribution)`](@ref)
-* [`QEDevents.randmom(rng::AbstractRNG,d::ScatteringProcessDistribution)`](@ref)
+* `QEDbase.process(d::ScatteringProcessDistribution)`
+* `QEDbase.model(d::ScatteringProcessDistribution)`
+* `QEDbase.phase_space_definition(d::ScatteringProcessDistribution)`
+* [`QEDevents._randmom(rng::AbstractRNG,d::ScatteringProcessDistribution)`](@ref)
 
 """
 const ScatteringProcessDistribution = ParticleSampleable{ProcessLikeVariate}
@@ -28,7 +28,6 @@ end
 Interface function, which asserts that the given `input` is valid.
 """
 function _assert_valid_input_type(d::ScatteringProcessDistribution, psp::PhaseSpacePoint)
-    # TODO: implement correct type check
     process(d) == process(psp) || throw(
         InvalidInputError(
             "process definition of the distribution $(process(d)) is not the same as of the phase space point $(process(psp))",
