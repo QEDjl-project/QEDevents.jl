@@ -1,9 +1,10 @@
 module QEDevents
 
-export weight
+export ParticleSampleable, weight
 
 export SingleParticleDistribution
 export MultiParticleDistribution
+export ScatteringProcessDistribution
 
 import Random: AbstractRNG
 import Distributions: rand, rand!, _rand!

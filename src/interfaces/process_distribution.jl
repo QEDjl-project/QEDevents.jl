@@ -6,40 +6,47 @@
 Base type for sample drawing from scattering process distributions. The following interface functions
 should be implemented:
 
-* [`QEDbase.scattering_process(d::ScatteringProcessDistribution)`](@ref)
-* [`QEDbase.computational_model(d::ScatteringProcessDistribution)`](@ref)
-* [`QEDbase.phasespace_definition(d::ScatteringProcessDistribution)`](@ref)
-* [`Base.size(d::ScatteringProcessDistribution)`](@ref)
+* [`QEDbase.process(d::ScatteringProcessDistribution)`](@ref)
+* [`QEDbase.model(d::ScatteringProcessDistribution)`](@ref)
+* [`QEDbase.phase_space_definition(d::ScatteringProcessDistribution)`](@ref)
 * [`QEDevents.randmom(rng::AbstractRNG,d::ScatteringProcessDistribution)`](@ref)
 
 """
 const ScatteringProcessDistribution = ParticleSampleable{ProcessLikeVariate}
 
 Broadcast.broadcastable(d::ScatteringProcessDistribution) = Ref(d)
-Base.length(d::ScatteringProcessDistribution) = prod(size(d))
 
 function QEDbase.incoming_particles(d::ScatteringProcessDistribution)
-    return incoming_particles(scattering_process(d))
+    return incoming_particles(process(d))
 end
 
 function QEDbase.outgoing_particles(d::ScatteringProcessDistribution)
-    return outgoing_particles(scattering_process(d))
+    return outgoing_particles(process(d))
 end
 
-#=
 """
 Interface function, which asserts that the given `input` is valid.
 """
-function _assert_valid_input_type(
-    d::MultiParticleDistribution, x::PS
-) where {PS<:Tuple{Vararg{ParticleStateful}}}
+function _assert_valid_input_type(d::ScatteringProcessDistribution, psp::PhaseSpacePoint)
     # TODO: implement correct type check
-    _recursive_type_check(x, _particles(d), _particle_directions(d))
+    process(d) == process(psp) || throw(
+        InvalidInputError(
+            "process definition of the distribution $(process(d)) is not the same as of the phase space point $(process(psp))",
+        ),
+    )
+    model(d) == model(psp) || throw(
+        InvalidInputError(
+            "model definition of the distribution $(model(d)) is not the same as of the phase space point $(model(psp))",
+        ),
+    )
+    phase_space_definition(d) == phase_space_definition(psp) || throw(
+        InvalidInputError(
+            "phase space definition of the distribution $(phase_space_definition(d)) is not the same as of the phase space point $(phase_space_definition(psp))",
+        ),
+    )
     return nothing
 end
-=#
 
-# TODO: move this to QEDcore.
 function _assemble_psp_type(
     proc::PROC, model::MODEL, ps_def::PSDEF, mom_type::Type{MOM}
 ) where {
@@ -61,21 +68,14 @@ end
 # used for pre-allocation of vectors of psps
 function Base.eltype(d::ScatteringProcessDistribution)
     return _assemble_psp_type(
-        scattering_process(d),
-        computational_model(d),
-        phasespace_definition(d),
-        _momentum_type(d),
+        process(d), model(d), phase_space_definition(d), _momentum_type(d)
     )
 end
 
 function Distributions.rand(rng::AbstractRNG, d::ScatteringProcessDistribution)
-    in_moms, out_moms = randmom(rng, d)
+    in_moms, out_moms = _randmom(rng, d)
 
     return PhaseSpacePoint(
-        scattering_process(d),
-        computational_model(d),
-        phasespace_definition(d),
-        in_moms,
-        out_moms,
+        process(d), model(d), phase_space_definition(d), in_moms, out_moms
     )
 end
