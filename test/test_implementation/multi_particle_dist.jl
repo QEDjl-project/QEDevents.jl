@@ -16,7 +16,7 @@ end
 
 QEDevents._particle_directions(d::TestMultiParticleDist) = d.dirs
 
-function QEDevents.randmom(rng::AbstractRNG, d::TestMultiParticleDist)
+function QEDevents._randmom(rng::AbstractRNG, d::TestMultiParticleDist)
     return _groundtruth_multi_randmom(rng, d)
 end
 

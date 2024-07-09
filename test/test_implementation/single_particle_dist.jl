@@ -22,8 +22,8 @@ QEDevents._particle(d::TestSingleParticleDist) = d.part
 QEDevents._particle_direction(d::TestSingleParticleDist) = d.dir
 QEDevents._momentum_type(d::TestSingleParticleDist{D,P,T}) where {D,P,T} = T
 
-function Distributions.rand(rng::AbstractRNG, d::TestSingleParticleDist)
-    return _groundtruth_single_rand(rng, d)
+function QEDevents._randmom(rng::AbstractRNG, d::TestSingleParticleDist)
+    return _groundtruth_single_randmom(rng, d)
 end
 
 function QEDevents._weight(d::TestSingleParticleDist, x::ParticleStateful)

@@ -8,7 +8,7 @@ should be implemented:
 
 * [`QEDevents._particles(d::MultiParticleDistribution)`](@ref)
 * [`QEDevents._particle_directions(d::MultiParticleDistribution)`](@ref)
-* [`QEDevents.randmom(rng::AbstractRNG,d::MultiParticleDistribution)`](@ref)
+* [`QEDevents._randmom(rng::AbstractRNG,d::MultiParticleDistribution)`](@ref)
 
 """
 const MultiParticleDistribution = ParticleSampleable{MultiParticleVariate}
@@ -45,14 +45,6 @@ function _particle_directions end
 function _particle_direction(d::MultiParticleDistribution)
     return Tuple(fill(UnknownDirection(), length(d)))
 end
-
-"""
-
-    randmom(rng::AbstractRNG,d::MultiParticleDistribution)
-
-Return an iterable container (e.g. vector or tuple) of momenta according to the distribution `d`.
-"""
-function randmom end
 
 # recursion termination: success
 @inline _recursive_type_check(::Tuple{}, ::Tuple{}, ::Tuple{}) = nothing
@@ -129,7 +121,7 @@ end
 
 function Distributions.rand(rng::AbstractRNG, d::MultiParticleDistribution)
     n = length(d)
-    moms = randmom(rng, d)
+    moms = _randmom(rng, d)
     dirs = _particle_directions(d)
     parts = _particles(d)
 

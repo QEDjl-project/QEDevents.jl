@@ -3,7 +3,7 @@ module QEDevents
 export weight
 
 export SingleParticleDistribution
-export MultiParticleDistribution, randmom
+export MultiParticleDistribution
 
 import Random: AbstractRNG
 import Distributions: rand, rand!, _rand!
