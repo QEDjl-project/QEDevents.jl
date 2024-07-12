@@ -9,4 +9,7 @@ begin
     @time @safetestset "multi particle distribution" begin
         include("interfaces/multi_particle_distribution.jl")
     end
+    @time @safetestset "scattering process distribution" begin
+        include("interfaces/process_distribution.jl")
+    end
 end

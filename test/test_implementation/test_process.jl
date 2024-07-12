@@ -8,8 +8,8 @@ struct TestProcess{IP<:Tuple,OP<:Tuple} <: AbstractProcessDefinition
 end
 
 function TestProcess(rng::AbstractRNG, N_in::Int, N_out::Int)
-    in_particles = rand(rng, PARTICLE_SET, N_in)
-    out_particles = rand(rng, PARTICLE_SET, N_out)
+    in_particles = Tuple(rand(rng, PARTICLE_SET, N_in))
+    out_particles = Tuple(rand(rng, PARTICLE_SET, N_out))
     return TestProcess(in_particles, out_particles)
 end
 
@@ -23,9 +23,18 @@ function QEDbase.out_phase_space_dimension(proc::TestProcess, ::TestModel)
     return number_outgoing_particles(proc) * 4
 end
 
-# dummy phase space definition + failing phase space definition
+# dummy process supposed to trigger InvalidInputErrors
+struct WrongTestProcess{IP<:Tuple,OP<:Tuple} <: AbstractProcessDefinition
+    incoming_particles::IP
+    outgoing_particles::OP
+end
+
+QEDbase.incoming_particles(proc::WrongTestProcess) = proc.incoming_particles
+QEDbase.outgoing_particles(proc::WrongTestProcess) = proc.outgoing_particles
+
+# dummy phase space definition + failing + wrong
 struct TestPhasespaceDef <: AbstractPhasespaceDefinition end
-struct TestPhasespaceDef_FAIL <: AbstractPhasespaceDefinition end
+struct WrongTestPhasespaceDef <: AbstractPhasespaceDefinition end
 
 # dummy implementation of the process interface
 
