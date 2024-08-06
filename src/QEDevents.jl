@@ -22,6 +22,4 @@ include("interfaces/single_particle_distribution.jl")
 include("interfaces/multi_particle_distribution.jl")
 include("interfaces/process_distribution.jl")
 
-include("patch_QEDbase.jl")
-
 end

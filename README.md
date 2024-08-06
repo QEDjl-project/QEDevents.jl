@@ -12,22 +12,12 @@ To install the current stable version of `QEDevents.jl` you may use the standard
 ```julia
 julia> using Pkg
 
-# add local registry, where QEDevents is registered
-julia> Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/QEDjl-project/registry"))
-# add general registry again to have it join the local registry
-julia> Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/JuliaRegistries/General"))
-
 julia> Pkg.add("QEDevents")
 ```
 
 or you use the Pkg prompt by hitting `]` within the Julia REPL and then type
 
 ```julia
-# add local registry, where QEDevents is registered
-(@v1.10) pkg> registry add https://github.com/QEDjl-project/registry
-# add general registry again to have it join the local registry
-(@v1.10) pkg> registry add https://github.com/JuliaRegistries/General
-
 (@v1.10) pkg> add QEDevents
 ```
 
