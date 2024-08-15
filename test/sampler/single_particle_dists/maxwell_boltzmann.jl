@@ -2,19 +2,21 @@ using QEDbase
 using QEDcore
 using QEDevents
 using Random: Random
+import Distributions: Normal, Gamma
 
 RNG = Random.MersenneTwister(137137137)
 
 include("../../test_implementation/TestImpl.jl")
+include("../testutils.jl")
 
 test_particle = rand(RNG, TestImpl.PARTICLE_SET)
 test_direction = rand(RNG, (Incoming(), Outgoing(), UnknownDirection()))
 
-const N_SAMPLES = 10000 # samples to be tested
+const N_SAMPLES = 1000000 # samples to be tested
 const TEMPERATURES = (1e-6, 1e-3, 1.0, 1e3, 1e6)
 
 @testset "$temp" for temp in TEMPERATURES
-    test_dist = MaxwellBoltzmannDistribution(test_direction, test_particle, temp)
+    test_dist = MaxwellBoltzmannParticle(test_direction, test_particle, temp)
 
     @testset "dist properties" begin
         @test temperature(test_dist) == temp
@@ -29,15 +31,32 @@ const TEMPERATURES = (1e-6, 1e-3, 1.0, 1e3, 1e6)
     end
 
     @testset "sample distribution" begin
-        # TODO:
-        # * find a way to test if n samples follow the distribution given by weight.
-        # * preparation: one needs a corrdinate_map for the samples, whose weight function
-        # is known. For instance, the 3-magnitude of samples from MaxwellBoltzmannDistribution
-        # is Maxwell-Boltzmann distributed
-        # * idea: normalize the weight function by using max_weight and normalize the
-        # binned numbers analogously. Then find a way to compare those two.
         # maybe this comes in handy: https://github.com/JuliaStats/Distributions.jl/blob/47c040beef8c61bad3e1eefa4fc8194e3a62b55a/test/testutils.jl#L188C10-L188C22
-        #
+        test_sample = rand(RNG, test_dist, N_SAMPLES)
+
+        @testset "magnitude" begin
+            a = sqrt(mass(test_particle) * temp)
+            mag_projection = TestProjection(getMag, MaxwellBoltzmann(a))
+            @test test_univariate_samples(mag_projection, test_sample)
+        end
+
+        @testset "x component" begin
+            a = sqrt(mass(test_particle) * temp)
+            x_projection = TestProjection(getX, Normal(0.0, a))
+            @test test_univariate_samples(x_projection, test_sample)
+        end
+
+        @testset "y component" begin
+            a = sqrt(mass(test_particle) * temp)
+            y_projection = TestProjection(getY, Normal(0.0, a))
+            @test test_univariate_samples(y_projection, test_sample)
+        end
+
+        @testset "z component" begin
+            a = sqrt(mass(test_particle) * temp)
+            z_projection = TestProjection(getZ, Normal(0.0, a))
+            @test test_univariate_samples(z_projection, test_sample)
+        end
     end
 
     @testset "weight properties" begin
@@ -45,7 +64,6 @@ const TEMPERATURES = (1e-6, 1e-3, 1.0, 1e3, 1e6)
         # * write a utils function for that (for general dists?)
         test_samples = rand(RNG, test_dist, N_SAMPLES)
         test_weights = weight.(test_dist, test_samples)
-
         @test all(test_weights .<= max_weight(test_dist))
     end
 end

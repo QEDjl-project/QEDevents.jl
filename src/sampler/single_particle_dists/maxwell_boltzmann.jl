@@ -1,52 +1,58 @@
-struct MaxwellBoltzmannDistribution{D,P,T,DIST} <: SingleParticleDistribution
+struct MaxwellBoltzmannParticle{D,P,T,DIST} <: SingleParticleDistribution
     dir::D
     part::P
     temperature::T
-    std_dev::T
-    comp_dist::DIST
+    rho_dist::DIST
 
-    function MaxwellBoltzmannDistribution(
+    function MaxwellBoltzmannParticle(
         dir::D, particle::P, temperature::T
     ) where {D<:ParticleDirection,P<:AbstractParticleType,T<:Real}
-        std_dev = sqrt(mass(particle) * temperature)
-        comp_dist = Distributions.Normal(0.0, std_dev)
-        return new{D,P,T,Distributions.Normal{T}}(
-            dir, particle, temperature, std_dev, comp_dist
+        a = sqrt(mass(particle) * temperature)
+        return new{D,P,T,MaxwellBoltzmann{T}}(
+            dir, particle, temperature, MaxwellBoltzmann(a)
         )
     end
 end
 
-_particle(d::MaxwellBoltzmannDistribution) = d.part
-_particle_direction(d::MaxwellBoltzmannDistribution) = d.dir
-temperature(d::MaxwellBoltzmannDistribution) = d.temperature
+_particle(d::MaxwellBoltzmannParticle) = d.part
+_particle_direction(d::MaxwellBoltzmannParticle) = d.dir
+temperature(d::MaxwellBoltzmannParticle) = d.temperature
 
-function QEDevents._weight(d::MaxwellBoltzmannDistribution, ps::ParticleStateful)
+function QEDevents._weight(
+    d::MaxwellBoltzmannParticle{D,P,T}, ps::ParticleStateful
+) where {D,P,T}
     mom = momentum(ps)
 
-    #if !isonshell(mom,mass(particle_species(ps)))
-    #    return 0.0
-    #end
+    mag = getMag(mom)
+    E = getE(mom)
+    m = mass(_particle(d))
 
-    comp_dist = d.comp_dist
-    # normalized on the maximum (=1/scale)
-    scale = sqrt((2 * pi)^3) * d.std_dev^3
-    return Distributions.pdf(comp_dist, getX(mom)) *
-           Distributions.pdf(comp_dist, getY(mom)) *
-           Distributions.pdf(comp_dist, getZ(mom)) *
-           scale
+    if abs(E^2 - m^2 - mag^2) <= 1e-5
+        return Distributions.pdf(d.rho_dist, mag) / (4 * pi)
+    else
+        return zero(typeof(mag))
+    end
 end
 
-function max_weight(d::MaxwellBoltzmannDistribution{D,P,T}) where {D,P,T}
-    return one(T)
+function max_weight(d::MaxwellBoltzmannParticle{D,P,T}) where {D,P,T}
+    return Distributions.pdf(d.rho_dist, sqrt(2) * d.rho_dist.a) / (4 * pi)
 end
 
-function _randmom(rng::AbstractRNG, d::MaxwellBoltzmannDistribution)
-    px, py, pz = rand(rng, d.comp_dist, 3)
-    E = sqrt(mass(d.part)^2 + px^2 + py^2 + pz^2)
+function QEDevents._randmom(rng::AbstractRNG, d::MaxwellBoltzmannParticle)
+    rho = rand(rng, d.rho_dist)
+    cth = rand(rng) * 2 - 1
+    sth = sqrt(1 - cth^2)
+    phi = rand(rng) * 2 * pi
+    sphi, cphi = sincos(phi)
+
+    E = sqrt(rho^2 + mass(d.part)^2)
+    px = rho * sth * cphi
+    py = rho * sth * sphi
+    pz = rho * cth
     return SFourMomentum(E, px, py, pz)
 end
 
 # consider writing this function for all single particle dists generically,
 # and implement _rand! accordingly. This could increase speed if a more
 # performant implementation for several samples exists.
-function _randmom(rng::AbstractRNG, d::MaxwellBoltzmannDistribution, n::Dims) end
+function _randmom(rng::AbstractRNG, d::MaxwellBoltzmannParticle, n::Dims) end

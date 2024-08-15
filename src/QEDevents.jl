@@ -7,7 +7,7 @@ export MultiParticleDistribution
 export ScatteringProcessDistribution
 
 # single particle distributions
-export MaxwellBoltzmannDistribution, temperature
+export MaxwellBoltzmannParticle, temperature
 
 import Random: AbstractRNG
 import Distributions: rand, rand!, _rand!
@@ -17,6 +17,10 @@ using QEDbase
 using QEDcore
 
 using DocStringExtensions
+
+# patch Distributions.jl
+include("patch_Distributions.jl")
+export MaxwellBoltzmann
 
 include("utils.jl")
 
