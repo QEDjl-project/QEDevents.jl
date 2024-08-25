@@ -19,7 +19,7 @@ _particle_direction(d::MaxwellBoltzmannParticle) = d.dir
 temperature(d::MaxwellBoltzmannParticle) = d.temperature
 
 function QEDevents._weight(
-    d::MaxwellBoltzmannParticle{D,P,T}, ps::ParticleStateful
+    d::MaxwellBoltzmannParticle{D,P,T}, ps::ParticleStateful{D,P}
 ) where {D,P,T}
     mom = momentum(ps)
 
@@ -30,11 +30,11 @@ function QEDevents._weight(
     if abs(E^2 - m^2 - mag^2) <= 1e-5
         return Distributions.pdf(d.rho_dist, mag) / (4 * pi)
     else
-        return zero(typeof(mag))
+        return zero(T)
     end
 end
 
-function max_weight(d::MaxwellBoltzmannParticle{D,P,T}) where {D,P,T}
+function max_weight(d::MaxwellBoltzmannParticle)
     return Distributions.pdf(d.rho_dist, sqrt(2) * d.rho_dist.a) / (4 * pi)
 end
 

@@ -1,7 +1,7 @@
 ### Maxwell Boltzmann distribution
 # https://en.wikipedia.org/wiki/Maxwell–Boltzmann_distribution
 
-const sqrt_two_over_pi = sqrt(2 / pi)
+const SQRT_TWO_OVER_PI = sqrt(2 / pi)
 const _CHI3 = Distributions.Chi(3; check_args=false)
 
 struct MaxwellBoltzmann{T<:Real} <: Distributions.ContinuousUnivariateDistribution
@@ -34,7 +34,7 @@ Distributions.params(d::MaxwellBoltzmann) = (d.a,)
 Distributions.partype(d::MaxwellBoltzmann{T}) where {T} = T
 
 ### Statistics
-Distributions.mean(d::MaxwellBoltzmann) = 2 * sqrt_two_over_pi * d.a
+Distributions.mean(d::MaxwellBoltzmann) = 2 * SQRT_TWO_OVER_PI * d.a
 Distributions.median(d::MaxwellBoltzmann{T}) where {T<:Real} = d.a * T(1.5381722544550522) # a * sqrt(2 Q^(-1)(3/2, 1/2))
 Distributions.mode(::MaxwellBoltzmann{T}) where {T<:Real} = sqrt(2) * d.a
 
@@ -47,6 +47,7 @@ function Distributions.kurtosis(::MaxwellBoltzmann{T}) where {T}
 end
 
 function Distributions.entropy(d::MaxwellBoltzmann{T}) where {T}
+    # 0.5772156649 is the Euler-Machgeroni constant
     return T(log(d.a * sqrt(2 * pi) + 0.5772156649 - 1 / 2))
 end
 
