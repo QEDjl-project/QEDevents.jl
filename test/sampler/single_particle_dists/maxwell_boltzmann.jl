@@ -12,7 +12,7 @@ include("../testutils.jl")
 test_particle = rand(RNG, TestImpl.PARTICLE_SET)
 test_direction = rand(RNG, (Incoming(), Outgoing(), UnknownDirection()))
 
-const N_SAMPLES = 1000000 # samples to be tested
+const N_SAMPLES = 1_000_000 # samples to be tested
 const TEMPERATURES = (1e-6, 1e-3, 1.0, 1e3, 1e6)
 
 @testset "$temp" for temp in TEMPERATURES
