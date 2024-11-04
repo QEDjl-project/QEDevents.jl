@@ -8,7 +8,7 @@ permissions:
   pull-requests: write
 jobs:
   CompatHelper:
-    if: github.repository == 'QEDjl-project/QEDfields.jl'
+    if: github.repository == 'QEDjl-project/QEDevents.jl'
     runs-on: ubuntu-latest
     steps:
       - name: Check if Julia is already available in the PATH
@@ -27,12 +27,6 @@ jobs:
           ENV["JULIA_PKG_SERVER"] = ""
           Pkg.Registry.add("General")
         shell: julia --color=yes {0}
-      - name: "Add QED custom registry"
-        run: |
-          import Pkg
-          ENV["JULIA_PKG_SERVER"] = ""
-          Pkg.Registry.add(Pkg.RegistrySpec(url="https://github.com/QEDjl-project/registry.git"))
-        shell: julia --color=yes {0}
       - name: "Install CompatHelper"
         run: |
           import Pkg
@@ -48,5 +42,4 @@ jobs:
         shell: julia --color=yes {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # COMPATHELPER_PRIV: ${{ secrets.DOCUMENTER_KEY }}
           COMPATHELPER_PRIV: ${{ secrets.COMPATHELPER_PRIV }}
