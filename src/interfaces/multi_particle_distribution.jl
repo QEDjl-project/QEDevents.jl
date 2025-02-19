@@ -68,6 +68,7 @@ function Distributions.rand(rng::AbstractRNG, d::MultiParticleDistribution)
     moms = _randmom(rng, d)
     dirs = _particle_directions(d)
     parts = _particles(d)
-
-    return ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
+    return Tuple{_assemble_tuple_types(parts, dirs, _momentum_type(d))...}(
+        ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
+    )
 end
