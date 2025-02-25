@@ -40,7 +40,7 @@ function _assert_valid_input_type(d::ScatteringProcessDistribution, psp::PhaseSp
     )
     phase_space_layout(d) == phase_space_layout(psp) || throw(
         InvalidInputError(
-            "phase space definition of the distribution $(phase_space_layout(d)) is not the same as of the phase space point $(phase_space_layout(psp))",
+            "the phase space layout of the distribution $(phase_space_layout(d)) is not the same as that of the phase space point $(phase_space_layout(psp))",
         ),
     )
     return nothing
