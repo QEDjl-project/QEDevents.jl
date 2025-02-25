@@ -61,7 +61,6 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
             i in 1:N
         )
 
-        @show length(test_dist)
         Random.seed!(RND_SEED)
         rng = default_rng()
         psf_rng = @inferred rand(rng, test_dist)
