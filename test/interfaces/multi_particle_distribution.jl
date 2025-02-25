@@ -1,5 +1,6 @@
 using QEDevents
 using QEDbase
+using QEDbase.Mocks
 using QEDcore
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
@@ -20,7 +21,7 @@ struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
-@testset "N=$N" for N in (1, rand(RNG, 2:10))
+@testset "N=$N" for N in (1, rand(RNG, 2:8))
     @testset "default properties" begin
         test_dist_plain = TestImpl.TestMultiParticleDistPlain(N)
         @test all(
@@ -29,7 +30,7 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
         @test QEDevents._momentum_type(test_dist_plain) == SFourMomentum
     end
 
-    test_particles = Tuple(rand(RNG, TestImpl.PARTICLE_SET, N))
+    test_particles = Tuple(rand(RNG, Mocks.PARTICLE_SET, N))
     test_directions = Tuple(rand(RNG, DIRECTIONS, N))
     test_dist = TestImpl.TestMultiParticleDist(test_directions, test_particles)
 

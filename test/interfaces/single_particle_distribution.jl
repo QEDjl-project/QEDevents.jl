@@ -1,5 +1,6 @@
 using QEDevents
 using QEDbase
+using QEDbase.Mocks
 using QEDcore
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
@@ -16,7 +17,7 @@ RNG = MersenneTwister(137137137)
 ATOL = 0.0
 RTOL = sqrt(eps())
 
-test_particle = rand(RNG, TestImpl.PARTICLE_SET)
+test_particle = rand(RNG, Mocks.PARTICLE_SET)
 struct WrongParticle <: AbstractParticleType end # for type checking in weight
 struct WrongDirection <: ParticleDirection end # for type checking in weight
 

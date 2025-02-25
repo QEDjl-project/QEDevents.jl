@@ -1,5 +1,6 @@
 using QEDevents
 using QEDbase
+using QEDbase.Mocks
 using QEDcore
 using Random: Random
 import Random: AbstractRNG, MersenneTwister, default_rng
@@ -15,30 +16,30 @@ RNG = MersenneTwister(137137)
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
 ATOL = 0.0
 RTOL = sqrt(eps())
-TESTMODEL = TestImpl.TestModel()
-TESTPSDEF = TestImpl.TestPhasespaceDef()
+TESTMODEL = MockModel()
+TESTPSL = MockOutPhaseSpaceLayout(MockMomentum)
 
 @testset "($N_INCOMING,$N_OUTGOING)" for (N_INCOMING, N_OUTGOING) in Iterators.product(
     (1, rand(RNG, 2:8)), (1, rand(RNG, 2:8))
 )
-    INCOMING_PARTICLES = Tuple(rand(RNG, TestImpl.PARTICLE_SET, N_INCOMING))
-    OUTGOING_PARTICLES = Tuple(rand(RNG, TestImpl.PARTICLE_SET, N_OUTGOING))
+    INCOMING_PARTICLES = Tuple(rand(RNG, Mocks.PARTICLE_SET, N_INCOMING))
+    OUTGOING_PARTICLES = Tuple(rand(RNG, Mocks.PARTICLE_SET, N_OUTGOING))
 
-    TESTPROC = TestImpl.TestProcess(INCOMING_PARTICLES, OUTGOING_PARTICLES)
+    TESTPROC = MockProcess(INCOMING_PARTICLES, OUTGOING_PARTICLES)
 
-    test_dist = TestImpl.TestProcessDistribution(TESTPROC, TESTMODEL, TESTPSDEF)
+    test_dist = TestImpl.TestProcessDistribution(TESTPROC, TESTMODEL, TESTPSL)
 
     @testset "properties" begin
         @test @inferred process(test_dist) == TESTPROC
         @test @inferred model(test_dist) == TESTMODEL
-        @test @inferred phase_space_definition(test_dist) == TESTPSDEF
+        @test @inferred phase_space_layout(test_dist) == TESTPSL
 
         @test @inferred incoming_particles(test_dist) == INCOMING_PARTICLES
         @test @inferred outgoing_particles(test_dist) == OUTGOING_PARTICLES
 
         @test @inferred QEDevents._momentum_type(test_dist) == SFourMomentum
         @test @inferred eltype(test_dist) == QEDevents._assemble_psp_type(
-            TESTPROC, TESTMODEL, TESTPSDEF, SFourMomentum
+            TESTPROC, TESTMODEL, TESTPSL, SFourMomentum
         )
     end
 
@@ -49,7 +50,7 @@ TESTPSDEF = TestImpl.TestPhasespaceDef()
             rng, test_dist
         )
         psp_groundtruth = PhaseSpacePoint(
-            TESTPROC, TESTMODEL, TESTPSDEF, in_moms_groundtruth, out_moms_groundtruth
+            TESTPROC, TESTMODEL, TESTPSL, in_moms_groundtruth, out_moms_groundtruth
         )
 
         Random.seed!(RND_SEED)
@@ -101,17 +102,17 @@ TESTPSDEF = TestImpl.TestPhasespaceDef()
                 TestImpl._groundtruth_process_weight(test_dist, test_input)
         end
         @testset "fails" begin
-            WRONG_TESTPROC = TestImpl.WrongTestProcess(
+            WRONG_TESTPROC = Mocks.MockProcess_FAIL_DIFFCS(
                 INCOMING_PARTICLES, OUTGOING_PARTICLES
             )
-            WRONG_TESTMODEL = TestImpl.WrongTestModel()
-            WRONG_TESTPSDEF = TestImpl.WrongTestPhasespaceDef()
+            WRONG_TESTMODEL = MockModel_FAIL()
+            WRONG_TESTPSL = MockOutPhaseSpaceLayout_FAIL(MockMomentum)
 
             invalid_combs = [
                 (proc, model, ps_def) for (proc, model, ps_def) in Iterators.product(
                     (TESTPROC, WRONG_TESTPROC),
                     (TESTMODEL, WRONG_TESTMODEL),
-                    (TESTPSDEF, WRONG_TESTPSDEF),
+                    (TESTPSL, WRONG_TESTPSL),
                 ) if !TestImpl._all_valid(proc, model, ps_def)
             ]
 
