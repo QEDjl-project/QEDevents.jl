@@ -6,4 +6,4 @@ function tuple_setindex(t::Tuple, i, val)
 end
 
 _all_valid(x...) = false
-_all_valid(::TestProcess, ::TestModel, ::TestPhasespaceDef) = true
+_all_valid(::MockProcess, ::MockModel, ::MockOutPhaseSpaceLayout) = true

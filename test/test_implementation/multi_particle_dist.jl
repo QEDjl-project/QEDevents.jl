@@ -1,5 +1,5 @@
 
-PARTICLE_DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
+const PARTICLE_DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 
 struct TestMultiParticleDist{DT<:Tuple,PT<:Tuple,RT} <: MultiParticleDistribution
     dirs::DT
@@ -30,4 +30,4 @@ struct TestMultiParticleDistPlain <: MultiParticleDistribution
     n::Int
 end
 
-QEDevents._particles(d::TestMultiParticleDistPlain) = Tuple(fill(TestParticle(), d.n))
+QEDevents._particles(d::TestMultiParticleDistPlain) = rand(Mocks.PARTICLE_SET, d.n)

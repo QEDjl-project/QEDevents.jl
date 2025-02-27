@@ -1,4 +1,5 @@
 using QEDbase
+using QEDbase.Mocks
 using QEDcore
 using QEDevents
 using Random: Random
@@ -9,7 +10,7 @@ RNG = Random.MersenneTwister(137137137)
 include("../../test_implementation/TestImpl.jl")
 include("../testutils.jl")
 
-test_particle = rand(RNG, TestImpl.PARTICLE_SET)
+test_particle = rand(RNG, (MockFermion(), MockBoson()))
 test_direction = rand(RNG, (Incoming(), Outgoing(), UnknownDirection()))
 
 const N_SAMPLES = 1_000_000 # samples to be tested

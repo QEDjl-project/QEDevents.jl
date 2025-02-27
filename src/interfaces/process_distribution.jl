@@ -8,7 +8,7 @@ should be implemented:
 
 * `QEDbase.process(d::ScatteringProcessDistribution)`
 * `QEDbase.model(d::ScatteringProcessDistribution)`
-* `QEDbase.phase_space_definition(d::ScatteringProcessDistribution)`
+* `QEDbase.phase_space_layout(d::ScatteringProcessDistribution)`
 * [`QEDevents._randmom(rng::AbstractRNG,d::ScatteringProcessDistribution)`](@ref)
 
 """
@@ -38,20 +38,20 @@ function _assert_valid_input_type(d::ScatteringProcessDistribution, psp::PhaseSp
             "model definition of the distribution $(model(d)) is not the same as of the phase space point $(model(psp))",
         ),
     )
-    phase_space_definition(d) == phase_space_definition(psp) || throw(
+    phase_space_layout(d) == phase_space_layout(psp) || throw(
         InvalidInputError(
-            "phase space definition of the distribution $(phase_space_definition(d)) is not the same as of the phase space point $(phase_space_definition(psp))",
+            "the phase space layout of the distribution $(phase_space_layout(d)) is not the same as that of the phase space point $(phase_space_layout(psp))",
         ),
     )
     return nothing
 end
 
 function _assemble_psp_type(
-    proc::PROC, model::MODEL, ps_def::PSDEF, mom_type::Type{MOM}
+    proc::PROC, model::MODEL, ps_def::PSL, mom_type::Type{MOM}
 ) where {
     PROC<:AbstractProcessDefinition,
     MODEL<:AbstractModelDefinition,
-    PSDEF<:AbstractPhasespaceDefinition,
+    PSL<:AbstractPhaseSpaceLayout,
     MOM<:AbstractFourMomentum,
 }
     IN_PARTICLES = Tuple{
@@ -61,20 +61,18 @@ function _assemble_psp_type(
         _assemble_tuple_types(outgoing_particles(proc), Outgoing(), MOM)...
     }
 
-    return PhaseSpacePoint{PROC,MODEL,PSDEF,IN_PARTICLES,OUT_PARTICLES,MOM}
+    return PhaseSpacePoint{PROC,MODEL,PSL,IN_PARTICLES,OUT_PARTICLES,MOM}
 end
 
 # used for pre-allocation of vectors of psps
 function Base.eltype(d::ScatteringProcessDistribution)
     return _assemble_psp_type(
-        process(d), model(d), phase_space_definition(d), _momentum_type(d)
+        process(d), model(d), phase_space_layout(d), _momentum_type(d)
     )
 end
 
 function Distributions.rand(rng::AbstractRNG, d::ScatteringProcessDistribution)
     in_moms, out_moms = _randmom(rng, d)
 
-    return PhaseSpacePoint(
-        process(d), model(d), phase_space_definition(d), in_moms, out_moms
-    )
+    return PhaseSpacePoint(process(d), model(d), phase_space_layout(d), in_moms, out_moms)
 end

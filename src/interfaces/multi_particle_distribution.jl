@@ -69,5 +69,8 @@ function Distributions.rand(rng::AbstractRNG, d::MultiParticleDistribution)
     dirs = _particle_directions(d)
     parts = _particles(d)
 
-    return ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
+    # ntuple is not type-stable for parametric type in Julia 1.10
+    return Tuple{_assemble_tuple_types(parts, dirs, _momentum_type(d))...}(
+        ntuple(i -> ParticleStateful(dirs[i], parts[i], moms[i]), Val(n))
+    )
 end
