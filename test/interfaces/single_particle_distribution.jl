@@ -23,11 +23,12 @@ struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
+const MOM_TYPE = SFourMomentum{Float64}
 
 @testset "default properties" begin
     test_dist_plain = TestImpl.TestSingleParticleDistPlain()
     @test QEDevents._particle_direction(test_dist_plain) == QEDevents.UnknownDirection()
-    @test QEDevents._momentum_type(test_dist_plain) == SFourMomentum
+    @test QEDevents._momentum_type(test_dist_plain) == MOM_TYPE
 end
 
 @testset "$dir" for dir in DIRECTIONS
@@ -39,7 +40,7 @@ end
         @test @inferred length(test_dist) == 1
         @test @inferred size(test_dist) == ()
         @test @inferred eltype(test_dist) ==
-            ParticleStateful{typeof(dir),typeof(test_particle),SFourMomentum}
+            ParticleStateful{typeof(dir),typeof(test_particle),MOM_TYPE}
     end
 
     @testset "randmom" begin
@@ -89,13 +90,13 @@ end
 
                     Random.seed!(RND_SEED)
                     rng = default_rng()
-                    mom_prealloc_rng = Array{SFourMomentum}(undef, shape...)
+                    mom_prealloc_rng = Array{MOM_TYPE}(undef, shape...)
                     psf_prealloc_rng =
                         ParticleStateful.(dir, test_particle, mom_prealloc_rng)
                     @inferred Random.rand!(rng, test_dist, psf_prealloc_rng)
 
                     Random.seed!(RND_SEED)
-                    mom_prealloc_default = Array{SFourMomentum}(undef, shape)
+                    mom_prealloc_default = Array{MOM_TYPE}(undef, shape)
                     psf_prealloc_default =
                         ParticleStateful.(dir, test_particle, mom_prealloc_default)
                     @inferred Random.rand!(test_dist, psf_prealloc_default)
@@ -117,14 +118,12 @@ end
 
         @testset "fails" begin
             # failing inputs with either wrong particle, wrong direction or both
-            psf_wrong_particle = ParticleStateful(
-                dir, WrongParticle(), rand(RNG, SFourMomentum)
-            )
+            psf_wrong_particle = ParticleStateful(dir, WrongParticle(), rand(RNG, MOM_TYPE))
             psf_wrong_direction = ParticleStateful(
-                WrongDirection(), test_particle, rand(RNG, SFourMomentum)
+                WrongDirection(), test_particle, rand(RNG, MOM_TYPE)
             )
             psf_wrong = ParticleStateful(
-                WrongDirection(), WrongParticle(), rand(RNG, SFourMomentum)
+                WrongDirection(), WrongParticle(), rand(RNG, MOM_TYPE)
             )
 
             @test_throws InvalidInputError weight(test_dist, psf_wrong_particle)
