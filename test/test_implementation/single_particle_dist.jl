@@ -11,11 +11,13 @@ struct TestSingleParticleDist{D,P,T} <: SingleParticleDistribution
 end
 
 function TestSingleParticleDist(part::AbstractParticleType)
-    return TestSingleParticleDist(QEDevents.UnknownDirection(), part, SFourMomentum)
+    return TestSingleParticleDist(
+        QEDevents.UnknownDirection(), part, SFourMomentum{Float64}
+    )
 end
 
 function TestSingleParticleDist(dir::ParticleDirection, part::AbstractParticleType)
-    return TestSingleParticleDist(dir, part, SFourMomentum)
+    return TestSingleParticleDist(dir, part, SFourMomentum{Float64})
 end
 
 QEDevents._particle(d::TestSingleParticleDist) = d.part

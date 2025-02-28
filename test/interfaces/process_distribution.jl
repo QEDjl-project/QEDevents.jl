@@ -18,6 +18,7 @@ ATOL = 0.0
 RTOL = sqrt(eps())
 TESTMODEL = MockModel()
 TESTPSL = MockOutPhaseSpaceLayout(MockMomentum)
+const MOM_TYPE = SFourMomentum{Float64}
 
 @testset "($N_INCOMING,$N_OUTGOING)" for (N_INCOMING, N_OUTGOING) in Iterators.product(
     (1, rand(RNG, 2:8)), (1, rand(RNG, 2:8))
@@ -37,9 +38,12 @@ TESTPSL = MockOutPhaseSpaceLayout(MockMomentum)
         @test @inferred incoming_particles(test_dist) == INCOMING_PARTICLES
         @test @inferred outgoing_particles(test_dist) == OUTGOING_PARTICLES
 
-        @test @inferred QEDevents._momentum_type(test_dist) == SFourMomentum
+        @test @inferred QEDevents._momentum_type(test_dist) == MOM_TYPE
         @test @inferred eltype(test_dist) == QEDevents._assemble_psp_type(
-            TESTPROC, TESTMODEL, TESTPSL, SFourMomentum
+            TESTPROC,
+            TESTMODEL,
+            TESTPSL,
+            MOM_TYPE,
         )
     end
 
