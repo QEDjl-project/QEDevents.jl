@@ -39,12 +39,8 @@ const MOM_TYPE = SFourMomentum{Float64}
         @test @inferred outgoing_particles(test_dist) == OUTGOING_PARTICLES
 
         @test @inferred QEDevents._momentum_type(test_dist) == MOM_TYPE
-        @test @inferred eltype(test_dist) == QEDevents._assemble_psp_type(
-            TESTPROC,
-            TESTMODEL,
-            TESTPSL,
-            MOM_TYPE,
-        )
+        @test @inferred eltype(test_dist) ==
+            QEDevents._assemble_psp_type(TESTPROC, TESTMODEL, TESTPSL, MOM_TYPE)
     end
 
     @testset "single sample" begin
