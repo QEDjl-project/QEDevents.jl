@@ -87,7 +87,7 @@ function QEDevents._randmom(rng::AbstractRNG, d::MaxwellBoltzmannParticle)
     px = rho * sth * cphi
     py = rho * sth * sphi
     pz = rho * cth
-    return SFourMomentum(E, px, py, pz)
+    return _momentum_type(d)(E, px, py, pz)
 end
 
 # consider writing this function for all single particle dists generically,

@@ -21,13 +21,15 @@ struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
+const MOM_TYPE = SFourMomentum{Float64}
+
 @testset "N=$N" for N in (1, rand(RNG, 2:8))
     @testset "default properties" begin
         test_dist_plain = TestImpl.TestMultiParticleDistPlain(N)
         @test all(
             QEDevents._particle_direction(test_dist_plain) .== QEDevents.UnknownDirection()
         )
-        @test QEDevents._momentum_type(test_dist_plain) == SFourMomentum
+        @test QEDevents._momentum_type(test_dist_plain) == MOM_TYPE
     end
 
     test_particles = Tuple(rand(RNG, Mocks.PARTICLE_SET, N))
@@ -113,21 +115,21 @@ RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
 
             # failing inputs with either wrong particle, wrong direction or both
             psf_wrong_particle = ParticleStateful(
-                test_directions[1], WrongParticle(), rand(RNG, SFourMomentum)
+                test_directions[1], WrongParticle(), rand(RNG, MOM_TYPE)
             )
             input_wrong_particle = TestImpl.tuple_setindex(
                 correct_input, 1, psf_wrong_particle
             )
 
             psf_wrong_direction = ParticleStateful(
-                WrongDirection(), test_particles[1], rand(RNG, SFourMomentum)
+                WrongDirection(), test_particles[1], rand(RNG, MOM_TYPE)
             )
             input_wrong_direction = TestImpl.tuple_setindex(
                 correct_input, 1, psf_wrong_direction
             )
 
             psf_wrong = ParticleStateful(
-                WrongDirection(), WrongParticle(), rand(RNG, SFourMomentum)
+                WrongDirection(), WrongParticle(), rand(RNG, MOM_TYPE)
             )
             input_wrong = TestImpl.tuple_setindex(correct_input, 1, psf_wrong)
 

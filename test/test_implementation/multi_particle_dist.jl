@@ -5,7 +5,9 @@ struct TestMultiParticleDist{DT<:Tuple,PT<:Tuple,RT} <: MultiParticleDistributio
     dirs::DT
     parts::PT
     function TestMultiParticleDist(dirs::DT, parts::PT) where {DT,PT}
-        res_type = Tuple{QEDevents._assemble_tuple_types(parts, dirs, SFourMomentum)...}
+        res_type = Tuple{
+            QEDevents._assemble_tuple_types(parts, dirs, SFourMomentum{Float64})...
+        }
         return new{DT,PT,res_type}(dirs, parts)
     end
 end

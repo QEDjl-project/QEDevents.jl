@@ -117,7 +117,7 @@ abstract type ParticleSampleable{F<:QEDlikeVariate} <:
 """
     _momentum_type(s::ParticleSampleable,x)
 
-Return the momentum type used for the generation of samples. The default is `SFourMomentum`.
+Return the momentum type used for the generation of samples. The default is `SFourMomentum{Float64}`.
 
 !!! note
 
@@ -125,7 +125,7 @@ Return the momentum type used for the generation of samples. The default is `SFo
 
 """
 function _momentum_type(s::ParticleSampleable)
-    return SFourMomentum
+    return SFourMomentum{Float64}
 end
 
 """
@@ -139,7 +139,7 @@ The actual return type for `_randmom` depends on the variate form.
 
 !!! note "Single particle distributions"
 
-    The `_randmom` function must return a single momentum, which type is the same as retured by [`_momentum_type`](@ref)
+    The `_randmom` function must return a single momentum, which type is the same as returned by [`_momentum_type`](@ref)
 
 !!! note "Multiple particle distribution"
 
