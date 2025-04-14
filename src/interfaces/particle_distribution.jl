@@ -1,4 +1,3 @@
-
 # todo: find better name for variate forms used in QEDevents.jl
 abstract type QEDlikeVariate <: Distributions.VariateForm end
 
@@ -111,8 +110,8 @@ using the result of `rand`.
     which returns a `PhaseSpacePoint` including the respective scattering process, computation model and phase-space definition.
 
 """
-abstract type ParticleSampleable{F<:QEDlikeVariate} <:
-              Distributions.Sampleable{F,Distributions.Continuous} end
+abstract type ParticleSampleable{F <: QEDlikeVariate} <:
+Distributions.Sampleable{F, Distributions.Continuous} end
 
 """
     _momentum_type(s::ParticleSampleable,x)

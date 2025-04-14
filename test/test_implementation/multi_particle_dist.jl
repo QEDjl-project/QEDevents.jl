@@ -1,14 +1,13 @@
-
 const PARTICLE_DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
 
-struct TestMultiParticleDist{DT<:Tuple,PT<:Tuple,RT} <: MultiParticleDistribution
+struct TestMultiParticleDist{DT <: Tuple, PT <: Tuple, RT} <: MultiParticleDistribution
     dirs::DT
     parts::PT
-    function TestMultiParticleDist(dirs::DT, parts::PT) where {DT,PT}
+    function TestMultiParticleDist(dirs::DT, parts::PT) where {DT, PT}
         res_type = Tuple{
-            QEDevents._assemble_tuple_types(parts, dirs, SFourMomentum{Float64})...
+            QEDevents._assemble_tuple_types(parts, dirs, SFourMomentum{Float64})...,
         }
-        return new{DT,PT,res_type}(dirs, parts)
+        return new{DT, PT, res_type}(dirs, parts)
     end
 end
 

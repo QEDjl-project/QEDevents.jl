@@ -22,7 +22,7 @@ struct WrongParticle <: AbstractParticleType end # for type checking in weight
 struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
-RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
+RND_SEED = ceil(Int, 1.0e6 * rand(RNG)) # for comparison
 const MOM_TYPE = SFourMomentum{Float64}
 
 @testset "default properties" begin
@@ -40,7 +40,7 @@ end
         @test @inferred length(test_dist) == 1
         @test @inferred size(test_dist) == ()
         @test @inferred eltype(test_dist) ==
-            ParticleStateful{typeof(dir),typeof(test_particle),MOM_TYPE}
+            ParticleStateful{typeof(dir), typeof(test_particle), MOM_TYPE}
     end
 
     @testset "randmom" begin

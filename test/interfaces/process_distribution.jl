@@ -13,7 +13,7 @@ include("../test_implementation/TestImpl.jl")
 
 RNG = MersenneTwister(137137)
 
-RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
+RND_SEED = ceil(Int, 1.0e6 * rand(RNG)) # for comparison
 ATOL = 0.0
 RTOL = sqrt(eps())
 TESTMODEL = MockModel()
@@ -21,8 +21,8 @@ TESTPSL = MockOutPhaseSpaceLayout(MockMomentum)
 const MOM_TYPE = SFourMomentum{Float64}
 
 @testset "($N_INCOMING,$N_OUTGOING)" for (N_INCOMING, N_OUTGOING) in Iterators.product(
-    (1, rand(RNG, 2:8)), (1, rand(RNG, 2:8))
-)
+        (1, rand(RNG, 2:8)), (1, rand(RNG, 2:8))
+    )
     INCOMING_PARTICLES = Tuple(rand(RNG, Mocks.PARTICLE_SET, N_INCOMING))
     OUTGOING_PARTICLES = Tuple(rand(RNG, Mocks.PARTICLE_SET, N_OUTGOING))
 
@@ -110,17 +110,17 @@ const MOM_TYPE = SFourMomentum{Float64}
 
             invalid_combs = [
                 (proc, model, ps_def) for (proc, model, ps_def) in Iterators.product(
-                    (TESTPROC, WRONG_TESTPROC),
-                    (TESTMODEL, WRONG_TESTMODEL),
-                    (TESTPSL, WRONG_TESTPSL),
-                ) if !TestImpl._all_valid(proc, model, ps_def)
+                        (TESTPROC, WRONG_TESTPROC),
+                        (TESTMODEL, WRONG_TESTMODEL),
+                        (TESTPSL, WRONG_TESTPSL),
+                    ) if !TestImpl._all_valid(proc, model, ps_def)
             ]
 
             correct_in_moms, correct_out_moms = QEDevents._randmom(RNG, test_dist)
 
             @testset "$test_proc $test_model $test_ps_def" for (
-                test_proc, test_model, test_ps_def
-            ) in invalid_combs
+                    test_proc, test_model, test_ps_def,
+                ) in invalid_combs
                 wrong_input = PhaseSpacePoint(
                     test_proc, test_model, test_ps_def, correct_in_moms, correct_out_moms
                 )

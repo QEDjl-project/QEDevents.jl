@@ -3,7 +3,7 @@ import Distributions: pdf, quantile, Normal
 import StatsBase: fit, Histogram, middle
 using LinearAlgebra
 
-struct TestProjection{F,D<:Distributions.UnivariateDistribution}
+struct TestProjection{F, D <: Distributions.UnivariateDistribution}
     proj::F
     target_dist::D
 end
@@ -15,12 +15,12 @@ end
 Tests if the given projection of the given samples follow the target_dist.
 """
 function test_univariate_samples(
-    p::TestProjection, samples::AbstractVector{<:ParticleStateful}; nbins=50, q=1e-4
-)
+        p::TestProjection, samples::AbstractVector{<:ParticleStateful}; nbins = 50, q = 1.0e-4
+    )
     moms = momentum.(samples)
     samples_proj = p.proj.(moms)
 
-    h = normalize(fit(Histogram, samples_proj; nbins=nbins, closed=:right); mode=:pdf)
+    h = normalize(fit(Histogram, samples_proj; nbins = nbins, closed = :right); mode = :pdf)
     ww = h.weights
     w = map(Base.Fix1(pdf, p.target_dist), h.edges[1])
     n = length(h.edges[1]) - 1

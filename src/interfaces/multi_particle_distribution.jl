@@ -1,4 +1,3 @@
-
 """
 
    MultiParticleDistribution
@@ -50,8 +49,8 @@ end
 Interface function, which asserts that the given `input` is valid.
 """
 function _assert_valid_input_type(
-    d::MultiParticleDistribution, x::PS
-) where {PS<:Tuple{Vararg{ParticleStateful}}}
+        d::MultiParticleDistribution, x::PS
+    ) where {PS <: Tuple{Vararg{ParticleStateful}}}
     _recursive_type_check(x, _particles(d), _particle_directions(d))
     return nothing
 end
@@ -59,7 +58,7 @@ end
 # used for pre-allocation of vectors of particle-stateful
 function Base.eltype(d::MultiParticleDistribution)
     return Tuple{
-        _assemble_tuple_types(_particles(d), _particle_directions(d), _momentum_type(d))...
+        _assemble_tuple_types(_particles(d), _particle_directions(d), _momentum_type(d))...,
     }
 end
 
