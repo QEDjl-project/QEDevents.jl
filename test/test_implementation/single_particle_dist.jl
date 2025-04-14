@@ -4,7 +4,7 @@
 
 struct TestSingleParticleDistPlain <: SingleParticleDistribution end
 
-struct TestSingleParticleDist{D,P,T} <: SingleParticleDistribution
+struct TestSingleParticleDist{D, P, T} <: SingleParticleDistribution
     dir::D
     part::P
     mom_type::Type{T}
@@ -22,7 +22,7 @@ end
 
 QEDevents._particle(d::TestSingleParticleDist) = d.part
 QEDevents._particle_direction(d::TestSingleParticleDist) = d.dir
-QEDevents._momentum_type(d::TestSingleParticleDist{D,P,T}) where {D,P,T} = T
+QEDevents._momentum_type(d::TestSingleParticleDist{D, P, T}) where {D, P, T} = T
 
 function QEDevents._randmom(rng::AbstractRNG, d::TestSingleParticleDist)
     return _groundtruth_single_randmom(rng, d)

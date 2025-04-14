@@ -47,21 +47,21 @@ function _assert_valid_input_type(d::ScatteringProcessDistribution, psp::PhaseSp
 end
 
 function _assemble_psp_type(
-    proc::PROC, model::MODEL, ps_def::PSL, mom_type::Type{MOM}
-) where {
-    PROC<:AbstractProcessDefinition,
-    MODEL<:AbstractModelDefinition,
-    PSL<:AbstractPhaseSpaceLayout,
-    MOM<:AbstractFourMomentum,
-}
+        proc::PROC, model::MODEL, ps_def::PSL, mom_type::Type{MOM}
+    ) where {
+        PROC <: AbstractProcessDefinition,
+        MODEL <: AbstractModelDefinition,
+        PSL <: AbstractPhaseSpaceLayout,
+        MOM <: AbstractFourMomentum,
+    }
     IN_PARTICLES = Tuple{
-        _assemble_tuple_types(incoming_particles(proc), Incoming(), MOM)...
+        _assemble_tuple_types(incoming_particles(proc), Incoming(), MOM)...,
     }
     OUT_PARTICLES = Tuple{
-        _assemble_tuple_types(outgoing_particles(proc), Outgoing(), MOM)...
+        _assemble_tuple_types(outgoing_particles(proc), Outgoing(), MOM)...,
     }
 
-    return PhaseSpacePoint{PROC,MODEL,PSL,IN_PARTICLES,OUT_PARTICLES,MOM}
+    return PhaseSpacePoint{PROC, MODEL, PSL, IN_PARTICLES, OUT_PARTICLES, MOM}
 end
 
 # used for pre-allocation of vectors of psps

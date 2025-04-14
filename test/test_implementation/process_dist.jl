@@ -1,5 +1,4 @@
-
-struct TestProcessDistribution{PROC,MODEL,PSL} <: ScatteringProcessDistribution
+struct TestProcessDistribution{PROC, MODEL, PSL} <: ScatteringProcessDistribution
     proc::PROC
     model::MODEL
     psl::PSL

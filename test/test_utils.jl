@@ -1,4 +1,3 @@
-
 """
 replace i-th entry of t with val
 """
@@ -14,5 +13,5 @@ function _groundtruth_multi_randmom(rng, d)
 end
 
 function _groundtruth_multi_weight(dist, psfs)
-    @. getE(momentum(psfs))
+    return @. getE(momentum(psfs))
 end

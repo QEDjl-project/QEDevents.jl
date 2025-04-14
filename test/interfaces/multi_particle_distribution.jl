@@ -20,7 +20,7 @@ struct WrongParticle <: AbstractParticleType end # for type checking in weight
 struct WrongDirection <: ParticleDirection end # for type checking in weight
 
 DIRECTIONS = (Incoming(), Outgoing(), QEDevents.UnknownDirection())
-RND_SEED = ceil(Int, 1e6 * rand(RNG)) # for comparison
+RND_SEED = ceil(Int, 1.0e6 * rand(RNG)) # for comparison
 const MOM_TYPE = SFourMomentum{Float64}
 
 @testset "N=$N" for N in (1, rand(RNG, 2:8))
@@ -60,7 +60,7 @@ const MOM_TYPE = SFourMomentum{Float64}
         moms_groundtruth = TestImpl._groundtruth_multi_randmom(rng, test_dist)
         psf_groundtruth = Tuple(
             ParticleStateful(test_directions[i], test_particles[i], moms_groundtruth[i]) for
-            i in 1:N
+                i in 1:N
         )
 
         Random.seed!(RND_SEED)

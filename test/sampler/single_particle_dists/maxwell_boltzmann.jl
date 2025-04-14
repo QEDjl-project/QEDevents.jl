@@ -14,7 +14,7 @@ test_particle = rand(RNG, (MockFermion(), MockBoson()))
 test_direction = rand(RNG, (Incoming(), Outgoing(), UnknownDirection()))
 
 const N_SAMPLES = 1_000_000 # samples to be tested
-const TEMPERATURES = (1e-6, 1e-3, 1.0, 1e3, 1e6)
+const TEMPERATURES = (1.0e-6, 1.0e-3, 1.0, 1.0e3, 1.0e6)
 
 @testset "$temp" for temp in TEMPERATURES
     test_dist = MaxwellBoltzmannParticle(test_direction, test_particle, temp)
