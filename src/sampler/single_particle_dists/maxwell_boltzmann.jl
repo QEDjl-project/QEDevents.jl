@@ -16,17 +16,17 @@ External links
 * [Maxwell-Boltzmann distributed four-momenta on Wikipedia](https://en.wikipedia.org/wiki/Maxwell–Boltzmann_distribution#Distribution_for_the_momentum_vector)
 
 """
-struct MaxwellBoltzmannParticle{D,P,T,DIST} <: SingleParticleDistribution
+struct MaxwellBoltzmannParticle{D, P, T, DIST} <: SingleParticleDistribution
     dir::D
     part::P
     temperature::T
     rho_dist::DIST
 
     function MaxwellBoltzmannParticle(
-        dir::D, particle::P, temperature::T
-    ) where {D<:ParticleDirection,P<:AbstractParticleType,T<:Real}
+            dir::D, particle::P, temperature::T
+        ) where {D <: ParticleDirection, P <: AbstractParticleType, T <: Real}
         a = sqrt(mass(particle) * temperature)
-        return new{D,P,T,MaxwellBoltzmann{T}}(
+        return new{D, P, T, MaxwellBoltzmann{T}}(
             dir, particle, temperature, MaxwellBoltzmann(a)
         )
     end
@@ -57,15 +57,15 @@ with ``\\varrho^2 = p_x^2 + p_y^2 + p_z^2`` and ``a = \\sqrt{m k_B T}`` (``m`` i
 and ``T`` is the temperature).
 """
 function _weight(
-    d::MaxwellBoltzmannParticle{D,P,T}, ps::ParticleStateful{D,P}
-) where {D,P,T}
+        d::MaxwellBoltzmannParticle{D, P, T}, ps::ParticleStateful{D, P}
+    ) where {D, P, T}
     mom = momentum(ps)
 
     mag = getMag(mom)
     E = getE(mom)
     m = mass(_particle(d))
 
-    if abs(E^2 - m^2 - mag^2) <= 1e-5
+    if abs(E^2 - m^2 - mag^2) <= 1.0e-5
         return Distributions.pdf(d.rho_dist, mag) / (4 * pi)
     else
         return zero(T)
@@ -87,7 +87,7 @@ function QEDevents._randmom(rng::AbstractRNG, d::MaxwellBoltzmannParticle)
     px = rho * sth * cphi
     py = rho * sth * sphi
     pz = rho * cth
-    return SFourMomentum(E, px, py, pz)
+    return _momentum_type(d)(E, px, py, pz)
 end
 
 # consider writing this function for all single particle dists generically,

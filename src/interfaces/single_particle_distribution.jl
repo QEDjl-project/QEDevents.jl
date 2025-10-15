@@ -1,4 +1,3 @@
-
 """
 
     SingleParticleDistribution
@@ -47,8 +46,8 @@ _particle_direction(::SingleParticleDistribution) = UnknownDirection()
 Interface function, which asserts that the given `input` is valid.
 """
 function _assert_valid_input_type(
-    d::SingleParticleDistribution, x::ParticleStateful{D,P}
-) where {D,P}
+        d::SingleParticleDistribution, x::ParticleStateful{D, P}
+    ) where {D, P}
     typeof(_particle_direction(d)) == D ||
         throw(InvalidInputError("expected $(typeof(_particle_direction(d))) but got $D"))
 
@@ -62,7 +61,7 @@ end
 # todo: maybe find a better solution
 function Base.eltype(s::SingleParticleDistribution)
     return ParticleStateful{
-        typeof(_particle_direction(s)),typeof(_particle(s)),_momentum_type(s)
+        typeof(_particle_direction(s)), typeof(_particle(s)), _momentum_type(s),
     }
 end
 

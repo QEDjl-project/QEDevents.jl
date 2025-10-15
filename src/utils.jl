@@ -10,26 +10,26 @@
 
 # recursion termination: overload for unequal number of particles
 @inline function _recursive_type_check(
-    ::Tuple{Vararg{ParticleStateful,N}},
-    ::Tuple{Vararg{AbstractParticleType,M}},
-    ::Tuple{Vararg{ParticleDirection,M}},
-) where {N,M}
+        ::Tuple{Vararg{ParticleStateful, N}},
+        ::Tuple{Vararg{AbstractParticleType, M}},
+        ::Tuple{Vararg{ParticleDirection, M}},
+    ) where {N, M}
     throw(InvalidInputError("expected $(M) particles but got $(N)"))
     return nothing
 end
 
 # recursion termination: overload for invalid types
 @inline function _recursive_type_check(
-    ::Tuple{ParticleStateful{DIR_IN_T,SPECIES_IN_T},Vararg{ParticleStateful,N}},
-    ::Tuple{SPECIES_T,Vararg{AbstractParticleType,N}},
-    ::Tuple{DIR_T,Vararg{ParticleDirection,N}},
-) where {
-    N,
-    DIR_IN_T<:ParticleDirection,
-    DIR_T<:ParticleDirection,
-    SPECIES_IN_T<:AbstractParticleType,
-    SPECIES_T<:AbstractParticleType,
-}
+        ::Tuple{ParticleStateful{DIR_IN_T, SPECIES_IN_T}, Vararg{ParticleStateful, N}},
+        ::Tuple{SPECIES_T, Vararg{AbstractParticleType, N}},
+        ::Tuple{DIR_T, Vararg{ParticleDirection, N}},
+    ) where {
+        N,
+        DIR_IN_T <: ParticleDirection,
+        DIR_T <: ParticleDirection,
+        SPECIES_IN_T <: AbstractParticleType,
+        SPECIES_T <: AbstractParticleType,
+    }
     throw(
         InvalidInputError(
             "expected $(DIR_T()) $(SPECIES_T()) but got $(DIR_IN_T()) $(SPECIES_IN_T())"
@@ -39,10 +39,10 @@ end
 end
 
 @inline function _recursive_type_check(
-    t::Tuple{ParticleStateful{DIR_T,SPECIES_T},Vararg{ParticleStateful,N}},
-    p::Tuple{SPECIES_T,Vararg{AbstractParticleType,N}},
-    dir::Tuple{DIR_T,Vararg{ParticleDirection,N}},
-) where {N,DIR_T<:ParticleDirection,SPECIES_T<:AbstractParticleType}
+        t::Tuple{ParticleStateful{DIR_T, SPECIES_T}, Vararg{ParticleStateful, N}},
+        p::Tuple{SPECIES_T, Vararg{AbstractParticleType, N}},
+        dir::Tuple{DIR_T, Vararg{ParticleDirection, N}},
+    ) where {N, DIR_T <: ParticleDirection, SPECIES_T <: AbstractParticleType}
     return _recursive_type_check(t[2:end], p[2:end], dir[2:end])
 end
 
@@ -56,12 +56,12 @@ end
 @inline _assemble_tuple_types(::Tuple{}, ::Tuple{}, ::Type) = ()
 
 @inline function _assemble_tuple_types(
-    particle_types::Tuple{SPECIES_T,Vararg{AbstractParticleType}},
-    dir::Tuple{DIR_T,Vararg{ParticleDirection}},
-    ELTYPE::Type,
-) where {SPECIES_T<:AbstractParticleType,DIR_T<:ParticleDirection}
+        particle_types::Tuple{SPECIES_T, Vararg{AbstractParticleType}},
+        dir::Tuple{DIR_T, Vararg{ParticleDirection}},
+        ELTYPE::Type,
+    ) where {SPECIES_T <: AbstractParticleType, DIR_T <: ParticleDirection}
     return (
-        ParticleStateful{DIR_T,SPECIES_T,ELTYPE},
+        ParticleStateful{DIR_T, SPECIES_T, ELTYPE},
         _assemble_tuple_types(particle_types[2:end], dir[2:end], ELTYPE)...,
     )
 end
@@ -73,10 +73,10 @@ end
 
 # function assembling the correct type information for the tuple of ParticleStatefuls in a phasespace point constructed from momenta
 @inline function _assemble_tuple_types(
-    particle_types::Tuple{SPECIES_T,Vararg{AbstractParticleType}}, dir::DIR_T, ELTYPE::Type
-) where {SPECIES_T<:AbstractParticleType,DIR_T<:ParticleDirection}
+        particle_types::Tuple{SPECIES_T, Vararg{AbstractParticleType}}, dir::DIR_T, ELTYPE::Type
+    ) where {SPECIES_T <: AbstractParticleType, DIR_T <: ParticleDirection}
     return (
-        ParticleStateful{DIR_T,SPECIES_T,ELTYPE},
+        ParticleStateful{DIR_T, SPECIES_T, ELTYPE},
         _assemble_tuple_types(particle_types[2:end], dir, ELTYPE)...,
     )
 end
