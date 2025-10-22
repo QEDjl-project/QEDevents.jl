@@ -1,6 +1,6 @@
 stages:
-- generate
-- run
+  - generate
+  - run
 
 generate_pipeline:
   image: julia:1.10
@@ -8,6 +8,8 @@ generate_pipeline:
   variables:
     CI_QED_GIT_CI_TOOLS_URL: https://github.com/QEDjl-project/QuantumElectrodynamics.jl.git
     CI_QED_GIT_CI_TOOLS_BRANCH: dev
+    CI_QED_ENABLE_CUDA_TESTS: "ON"
+    CI_QED_ENABLE_AMDGPU_TESTS: "ON"
   script:
     - apt update && apt install -y git
     - git clone --depth 1 -b $CI_QED_GIT_CI_TOOLS_BRANCH $CI_QED_GIT_CI_TOOLS_URL /generator
@@ -16,23 +18,35 @@ generate_pipeline:
     - env | grep CI_QED_
     - julia --project=/generator/.ci/CI /generator/.ci/CI/script/bootloader.jl
       --output-cpu=cpu_pipeline.yaml
+      --output-gpu=gpu_pipeline.yaml
       --output-verify=verify.yaml
     - cat $CI_PROJECT_DIR/cpu_pipeline.yaml
+    - cat $CI_PROJECT_DIR/gpu_pipeline.yaml
     - cat $CI_PROJECT_DIR/verify.yaml
   artifacts:
     paths:
       - cpu_pipeline.yaml
+      - gpu_pipeline.yaml
       - verify.yaml
     expire_in: 1 week
   interruptible: true
   tags:
     - cpuonly
+    - x86_64
 
 cpu_tests:
   stage: run
   trigger:
     include:
       - artifact: cpu_pipeline.yaml
+        job: generate_pipeline
+    strategy: depend
+
+gpu_tests:
+  stage: run
+  trigger:
+    include:
+      - artifact: gpu_pipeline.yaml
         job: generate_pipeline
     strategy: depend
 
