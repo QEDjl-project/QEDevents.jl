@@ -18,6 +18,7 @@ QEDcore = "35dc0263-cb5f-4c33-a114-1d7f54ab753e"
 QEDprocesses = "46de9c38-1bb3-4547-a1ec-da24d767fdad"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 RejectionSamplers = "90f62166-f53e-5083-ac0e-6e2bf74182ae"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [weakdeps]
@@ -39,16 +40,19 @@ KernelAbstractions = "0.9.38"
 QEDbase = "0.5"
 QEDcore = "0.4"
 QEDprocesses = "0.5"
-RejectionSamplers = "0.1"
+RejectionSamplers = "0.1.0"
+StaticArrays = "1.9.15"
 StatsBase = "0.34"
 julia = "1.10"
 
 [extras]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+QEDprocesses = "46de9c38-1bb3-4547-a1ec-da24d767fdad"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["LinearAlgebra", "Random", "SafeTestsets", "Test", "Pkg"]
+test = ["LinearAlgebra", "Random", "SafeTestsets", "Test", "Pkg", "QEDprocesses", "StaticArrays"]

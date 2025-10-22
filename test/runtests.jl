@@ -3,7 +3,10 @@ using Test
 using SafeTestsets
 using Random
 using KernelAbstractions
+using StaticArrays
+using RejectionSamplers
 
+using QEDprocesses
 using QEDevents
 using QEDevents.TestUtils
 

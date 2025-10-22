@@ -29,6 +29,7 @@ export HardScatteringDistribution
 import Random: AbstractRNG
 import Distributions: rand, rand!, _rand!
 using Distributions: Distributions
+using StaticArrays
 
 using QEDbase
 using QEDcore
@@ -41,11 +42,11 @@ include("patch_Distributions.jl")
 export MaxwellBoltzmann
 
 include("utils.jl")
-
 include("deprecated.jl")
 
 include("sampler/single_particle_dists/maxwell_boltzmann.jl")
 
+include("target.jl")
 
 include("testutils/TestUtils.jl")
 end

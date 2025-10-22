@@ -23,13 +23,13 @@ struct HardScatteringDistribution{
         out_dim = phase_space_dimension(proc, model, psl)
         DOF = in_dim + out_dim
 
-        return new{P, M, PSL, DOF}(proc, model, psl)
+        return new{DOF, P, M, PSL}(proc, model, psl)
     end
 end
 
 function RejectionSamplers._compute(
         dist::HardScatteringDistribution{DOF},
-        coords::NTuple{DOF, T},
+        coords::Union{NTuple{DOF, T}, SVector{DOF, T}},
     ) where {DOF, T <: Real}
 
     psp = PhaseSpacePoint(dist.proc, dist.model, dist.psl, coords)
