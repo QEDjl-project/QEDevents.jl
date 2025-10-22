@@ -45,4 +45,7 @@ include("utils.jl")
 include("deprecated.jl")
 
 include("sampler/single_particle_dists/maxwell_boltzmann.jl")
+
+
+include("testutils/TestUtils.jl")
 end

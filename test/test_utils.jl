@@ -1,17 +1,20 @@
 """
-replace i-th entry of t with val
+    _is_test_platform_active(env_vars::AbstractVector{String}, default::Bool)::Bool
+
+# Args
+- `env_vars::AbstractVector{String}`: List of the names of environment variables. The value of the
+    first defined variable in the list is parsed and returned.
+- `default::Bool`: If none of the variables named in `env_vars` are defined, this value is returned.
+
+# Return
+
+Return if platform is active or not.
 """
-function tuple_setindex(t::Tuple, i, val)
-    return ntuple(j -> j == i ? val : t[j], length(t))
-end
-
-_all_valid(x...) = false
-_all_valid(::TestProcess, ::TestModel, ::TestPhasespaceDef) = true
-
-function _groundtruth_multi_randmom(rng, d)
-    return rand(rng, QEDevents._momentum_type(d), length(d))
-end
-
-function _groundtruth_multi_weight(dist, psfs)
-    return @. getE(momentum(psfs))
+function _is_test_platform_active(env_vars::AbstractVector{String}, default::Bool)::Bool
+    for env_var in env_vars
+        if haskey(ENV, env_var)
+            return tryparse(Bool, ENV[env_var])
+        end
+    end
+    return default
 end
