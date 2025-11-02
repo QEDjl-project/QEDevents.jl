@@ -7,8 +7,9 @@ CurrentModule = QEDevents
 Documentation for [QEDevents](https://github.com/QEDjl-project/QEDevents.jl).
 
 ```@index
+
 ```
 
 ```@autodocs
-Modules = [QEDevents]
+Modules = [QEDevents, QEDevents.TestUtils]
 ```
