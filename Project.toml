@@ -16,6 +16,7 @@ QEDbase = "10e22c08-3ccb-4172-bfcf-7d7aa3d04d93"
 QEDcore = "35dc0263-cb5f-4c33-a114-1d7f54ab753e"
 QEDprocesses = "46de9c38-1bb3-4547-a1ec-da24d767fdad"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+RejectionSamplers = "90f62166-f53e-5083-ac0e-6e2bf74182ae"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
@@ -24,6 +25,7 @@ DocStringExtensions = "0.9"
 QEDbase = "0.5"
 QEDcore = "0.4"
 QEDprocesses = "0.5"
+RejectionSamplers = "0.1"
 StatsBase = "0.34"
 julia = "1.10"
 
